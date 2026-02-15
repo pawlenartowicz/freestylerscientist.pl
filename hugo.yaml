@@ -1,0 +1,23 @@
+baseURL: "https://freestylerscientist.pl/"
+title: "Paweł Lenartowicz"
+languageCode: "en-US"
+theme: "academic"
+enableRobotsTXT: true
+
+permalinks:
+  page: "/:slug/"
+
+menus:
+  main:
+    - name: "Main page"
+      url: "/"
+      weight: 1
+    - name: "Works & Projects"
+      url: "/projects/"
+      weight: 2
+    - name: "Teaching & Workshops"
+      url: "/teaching/"
+      weight: 3
+    - name: "Support Me"
+      url: "/support_me/"
+      weight: 4

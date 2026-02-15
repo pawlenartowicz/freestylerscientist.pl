@@ -1,0 +1,76 @@
+---
+title: "Likelihood Ratio Test for Publication Bias"
+slug: "likelihood-ratio-test-for-publication-bias"
+layout: "single"
+type: "projects"
+sidebar: true
+description: "Likelihood Ratio Test for Publication Bias — a statistical method to detect and quantify publication bias in heterogeneous datasets."
+---
+
+<hr>
+
+<p style="text-align:center; font-size:1.15rem;"><em>a Proof of Concept</em></p>
+
+<h3><strong>Abstract</strong></h3>
+
+<p style="text-align: justify;">Publication bias poses a serious challenge to the integrity of scientific research and meta-analyses. There exist persistent methodological obstacles for estimating this bias, especially with heterogeneous dataset, where studies vary widely in methodologies and effect sizes. To address this gap, I propose a Likelihood Ratio Test for Publication Bias, a statistical method designed to detect and quantify publication bias in datasets of heterogeneous studies results. I also show the proof-of-concept implementation developed in Python and simulations that evaluate the performance. The results demonstrate that this new method clearly outperforms existing methods like Z-Curve 2 and the Caliper test in estimating the magnitude of publication bias, showing higher precision and reliability, with still some space for improvement due to spotted errors in the implemented algorithm. While inherent challenges in publication bias detection remain, such as the influence of different research practices and the need for large sample sizes, the Likelihood Ratio Test offers a significant advancement in addressing these issues.</p>
+
+<p>Author: Paweł Lenartowicz (me)</p>
+<p><strong>Link to full preprint</strong>: <a href="https://osf.io/preprints/metaarxiv/jt5zf" target="_blank" rel="noreferrer noopener">MetaArXiv</a></p>
+<p><strong>Link to code</strong>: <a href="https://github.com/pawlenartowicz/LikelihoodRatioBiasTest" target="_blank" rel="noreferrer noopener">GITHUB</a></p>
+
+<h3><strong>Key points</strong></h3>
+
+<h4><strong>Idea</strong></h4>
+
+<p style="text-align: justify;">The <strong>Likelihood Ratio Test for Publication Bias (LRBT)</strong> estimates two maximum likelihood approximations of test results to detect evidence of publication bias: one approximation assumes no bias, while the other allows for bias. By comparing the likelihood ratios of these two models, we obtain a p-value for the no-bias hypothesis.</p>
+
+<p style="text-align: justify;">The test approximates the original distribution by converting results to z-values and using a mixture of folded Gaussian distributions. For the biased components, it employs a left-censored Gaussian distribution. The Expectation-Maximization (EM) algorithm is used to estimate these parameters effectively. See the accompanying proof-of-concept paper for detailed theoretical justification.</p>
+
+<h4><strong>Why is it better than current methods?</strong></h4>
+
+<p style="text-align: justify;">When compared to the popular methods: <a href="http://doi.org/10.1561/100.00008024">Caliper Test</a> and <a href="https://replicationindex.com/2020/01/10/z-curve-2-0/">Z–Curve2</a>, LRBT demonstrates significantly lower mean squared error, achieving nearly unbiased estimation of the file-drawer effect. In terms of correlation, which excludes systematic errors from the compared methods, LRBT also outperforms both: achieving correlations of .86 compared to .83 and .72, or .80 compared to .65 and .65. (See <a href="#plot1">plot 1</a> and <a href="#plot2">plot 2</a>)</p>
+
+<figure id="plot1">
+  <img src="comparisions3-1024x324.png" alt="Comparison between LRBT, Caliper Test and Z-Curve2. Bars" style="width:100%;">
+  <figcaption>Plot 1 — Comparison of LRBT, Caliper, and Z-Curve2: Percentage of unreported of insignificant tests</figcaption>
+</figure>
+
+<figure id="plot2">
+  <img src="comparisions2.png" alt="Comparison between LRBT, Caliper Test and Z-Curve2. Dots" style="width:100%;">
+  <figcaption>Plot 2 — Comparison of LRBT, Caliper, and Z-Curve2: Percentage of unreported of all tests</figcaption>
+</figure>
+
+<p style="text-align: justify;">The Likelihood Ratio Bias Test (LRBT) has advantages over the tests compared, such as providing confidence intervals for the estimated bias and the ability to calculate the average power of studies. In addition to improved precision, the LRBT provides a more powerful and direct test for rejecting the null hypothesis of no publication bias, whereas other methods for estimating bias in heterogeneous datasets often only allow indirect rejection of the no-bias hypothesis.</p>
+
+<p style="text-align: justify;">The LRBT achieves better results because it takes a more comprehensive approach to bias detection. Unlike Z-Curve2, which only considers data above the significance threshold, LRBT analyses values both above and below the threshold, providing a more complete view of potential bias. In addition, LRBT avoids the imprecise approximations that Z-Curve2 uses for censored distributions. Compared to the Caliper test, LRBT's detailed modelling of z-scores around the critical value allows it to detect bias with greater accuracy and better separate true effects from biased results.</p>
+
+<h4>Limitations</h4>
+
+<p>LRBTs have many of the same limitations as other methods based on p-value distributions. The most important are:</p>
+<ul>
+  <li>It can only directly estimate publication bias (as nonreporting of insignificant tests). More complex biases, such as other practices that affect which tests are reported, lead to systematic errors in estimation.</li>
+  <li>Unless the bias is very large, hundreds of data points are required for sufficient power and discriminative ability.</li>
+  <li>Due to assumptions about the distribution of p-values, the method may be sensitive to the misspecification of the tests it analyses.</li>
+  <li>Implemented EM algorithm is still imperfect and sometimes do not find global maximum, so there is still room for improvement.</li>
+</ul>
+
+<h4>Conclusion</h4>
+
+<p style="text-align: justify;">The likelihood ratio test for publication bias presented here represents a significant advancement in the detection and quantification of publication bias in datasets. This framework allows statistical inference with specified levels of significance (α) and power (β), and facilitates the estimation and comparison of the magnitude of publication bias.<br>Two strong recommendations are proposed for reliable use:</p>
+<ul>
+  <li style="text-align: justify;">Unless carefully justified, publication bias analysis should be performed on datasets containing at least several hundred, preferably more than 1,000, test results from different sources. This should help to reduce the risks of autocorrelation, power bias, and also the risk of conducting an underpowered test. Exceptions to this recommendation could be carefully selected "focal hypothesis" or meta-analyses, but only if a large publication bias effect is expected.</li>
+  <li style="text-align: justify;">When comparing publication bias between different datasets, ensure that the two datasets were produced using a similar methodology, both in terms of publication culture, time period, and method of obtaining the test results (such as text mining).</li>
+</ul>
+
+<h4>To be done yet:</h4>
+
+<ul>
+  <li><del>Improve EM algorithm to ensure reliable convergence to the global maximum.</del></li>
+  <li><del>Conduct robustness tests on likelihood ratio distribution and Wilks' theorem applicability.</del></li>
+  <li><del>Validate the accuracy of bootstrapped confidence intervals.</del></li>
+  <li><del>Test assumptions about p-value distributions for various tests and powers.</del></li>
+  <li>Apply the method to real-world datasets for practical validation.</li>
+  <li>Develop Python package with enhanced visualization tools.</li>
+</ul>
+

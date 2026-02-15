@@ -1,0 +1,274 @@
+---
+title: "MCPower: Monte Carlo Power Analysis"
+slug: "mcpower"
+layout: "single"
+type: "projects"
+sidebar: true
+description: "MCPower: Monte Carlo power analysis for Python. Find sample sizes and check statistical power for complex models."
+---
+
+<hr>
+
+<p style="text-align:center; font-size:1.15rem;"><em>Simple Monte Carlo power analysis for complex models. Find the sample size you need or check if your study has enough power &mdash; even with complex models that traditional power analysis can&rsquo;t handle.</em></p>
+
+<div style="margin: 20px 0; text-align: left;">
+  <a href="https://github.com/pawlenartowicz/MCPower/actions"><img src="https://github.com/pawlenartowicz/MCPower/workflows/Tests/badge.svg" alt="Tests" style="display:inline; margin: 2px 4px; vertical-align: middle;"></a>
+  <a href="https://pypi.org/project/MCPower/"><img src="https://img.shields.io/pypi/v/MCPower" alt="PyPI" style="display:inline; margin: 2px 4px; vertical-align: middle;"></a>
+  <a href="https://pypi.org/project/MCPower/"><img src="https://img.shields.io/pypi/pyversions/mcpower" alt="Python" style="display:inline; margin: 2px 4px; vertical-align: middle;"></a>
+  <a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPLv3-green.svg" alt="License: GPL v3" style="display:inline; margin: 2px 4px; vertical-align: middle;"></a>
+  <a href="https://doi.org/10.5281/zenodo.16502734"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.16502734.svg" alt="DOI" style="display:inline; margin: 2px 4px; vertical-align: middle;"></a>
+  <img src="https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white" alt="Windows" style="display:inline; margin: 2px 4px; vertical-align: middle;">
+  <img src="https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=white" alt="macOS" style="display:inline; margin: 2px 4px; vertical-align: middle;">
+  <img src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" alt="Linux" style="display:inline; margin: 2px 4px; vertical-align: middle;">
+</div>
+
+<figure>
+  <img src="mcpower_asci.png" alt="MCPower ASCII art" style="width:650px; height:auto;">
+</figure>
+
+<h2>Why MCPower?</h2>
+
+<p style="text-align: justify;"><strong>Traditional power analysis breaks down</strong> with interactions, correlated predictors, categorical variables, or non-normal data. MCPower uses simulation instead of formulas &mdash; it generates thousands of datasets exactly like yours, then sees how often your analysis finds real effects.</p>
+
+<ul>
+  <li><strong>Works with complexity</strong>: Interactions, correlations, factors, any distribution</li>
+  <li><strong>R-style formulas</strong>: <code>outcome = treatment + covariate + treatment*covariate</code></li>
+  <li><strong>Categorical variables</strong>: Multi-level factors automatically handled</li>
+  <li><strong>Two simple commands</strong>: Find sample size or check power</li>
+  <li><strong>Scenario analysis</strong>: Test robustness under realistic conditions</li>
+  <li><strong>Minimal math required</strong>: Just specify your model and effects</li>
+</ul>
+
+<hr>
+
+<h2>Desktop Application</h2>
+
+<p style="text-align: justify;">Prefer a graphical interface? <strong><a href="https://github.com/pawlenartowicz/mcpower-gui">MCPower GUI</a></strong> is a standalone desktop app &mdash; no Python installation required. Download ready-to-run executables for Windows, Linux, and macOS.</p>
+
+<table style="border-spacing: 12px 0; border-collapse: separate;">
+  <thead>
+    <tr><th>Platform</th><th>Download</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Windows</strong></td><td><a href="https://github.com/pawlenartowicz/mcpower-gui/releases/latest/download/MCPower.exe">MCPower.exe</a></td></tr>
+    <tr><td><strong>Linux</strong></td><td><a href="https://github.com/pawlenartowicz/mcpower-gui/releases/latest/download/MCPower-linux">MCPower-linux</a></td></tr>
+    <tr><td><strong>macOS</strong></td><td><a href="https://github.com/pawlenartowicz/mcpower-gui/releases/latest/download/MCPower-macos">MCPower-macos</a></td></tr>
+    <tr><td><strong>Alternative</strong></td><td><a href="https://sourceforge.net/projects/mcpower/">SourceForge</a></td></tr>
+  </tbody>
+</table>
+
+<p style="text-align: justify;">The GUI walks you through three steps: <strong>Model</strong> (define your study design), <strong>Analysis</strong> (choose mode and settings), and <strong>Results</strong> (view power tables, charts, and a replication script).</p>
+
+<hr>
+
+<h2>Get Started in 2 Minutes</h2>
+
+<h4>Installation</h4>
+
+<pre><code>pip install mcpower</code></pre>
+
+<h4>Your First Power Analysis</h4>
+
+<pre><code># python
+
+import mcpower
+
+# 1. Define your model (just like R)
+model = mcpower.MCPower("satisfaction = treatment + motivation")
+
+# 2. Set effect sizes (how big you expect effects to be)
+model.set_effects("treatment=0.5, motivation=0.3")
+
+# 3. Change the treatment to "binary" (people receive treatment or not)
+model.set_variable_type("treatment=binary")
+
+# 4. Find the sample size you need
+model.find_sample_size(target_test="treatment", from_size=50, to_size=200)</code></pre>
+
+<p><strong>Output</strong>: &ldquo;You need N=75 for 80% power to detect the treatment effect&rdquo;</p>
+
+<hr>
+
+<h2>Scenario Analysis: Test Your Assumptions</h2>
+
+<p style="text-align: justify;"><strong>Real studies rarely match perfect assumptions.</strong> MCPower&rsquo;s scenario analysis tests how robust your power calculations are under realistic conditions.</p>
+
+<pre><code># python
+
+model.find_sample_size(
+    target_test="treatment",
+    from_size=50, to_size=300,
+    scenarios=True  # The magic happens here
+)</code></pre>
+
+<pre><code>SCENARIO SUMMARY
+================================================================================
+
+Uncorrected Sample Sizes:
+Test                                     Optimistic   Realistic    Doomer
+-------------------------------------------------------------------------------
+treatment                                75           85           100
+================================================================================</code></pre>
+
+<ul>
+  <li><strong>Optimistic</strong>: Your ideal conditions (original settings)</li>
+  <li><strong>Realistic</strong>: Moderate real-world complications (recommended for planning)</li>
+  <li><strong>Doomer</strong>: Conservative estimate (if this is acceptable, you&rsquo;re really safe!)</li>
+</ul>
+
+<hr>
+
+<h2>Copy-Paste Examples</h2>
+
+<h4>Randomized Controlled Trial</h4>
+
+<pre><code># python
+
+import mcpower
+
+model = mcpower.MCPower("outcome = treatment + age + baseline_score")
+model.set_effects("treatment=0.6, age=0.2, baseline_score=0.8")
+model.set_variable_type("treatment=binary")
+
+model.find_sample_size(target_test="treatment", from_size=100, to_size=500,
+                      by=50, scenarios=True)</code></pre>
+
+<h4>A/B Test with Interaction</h4>
+
+<pre><code># python
+
+import mcpower
+
+model = mcpower.MCPower("conversion = treatment + user_type + treatment*user_type")
+model.set_effects("treatment=0.4, user_type=0.3, treatment:user_type=0.5")
+model.set_variable_type("treatment=binary, user_type=binary")
+
+model.find_power(sample_size=400, target_test="treatment:user_type", scenarios=True)</code></pre>
+
+<h4>Multi-Group Study with Categorical Variables</h4>
+
+<pre><code># python
+
+import mcpower
+
+model = mcpower.MCPower("wellbeing = treatment + education + age")
+model.set_variable_type("treatment=(factor,3), education=(factor,4)")
+model.set_effects("treatment[2]=0.4, treatment[3]=0.6, education[2]=0.3, education[3]=0.5, education[4]=0.7, age=0.2")
+
+model.find_sample_size(target_test="treatment[2], treatment[3]", scenarios=True)</code></pre>
+
+<h4>Survey with Correlated Predictors</h4>
+
+<pre><code># python
+
+import mcpower
+
+model = mcpower.MCPower("wellbeing = income + education + social_support")
+model.set_effects("income=0.4, education=0.3, social_support=0.6")
+model.set_correlations("corr(income, education)=0.5, corr(income, social_support)=0.3")
+
+model.find_sample_size(target_test="all", from_size=200, to_size=800,
+                      by=100, scenarios=True)</code></pre>
+
+<h4>Mixed-Effects Model (Random Intercept)</h4>
+
+<pre><code># python
+
+import mcpower
+
+model = mcpower.MCPower("satisfaction ~ treatment + motivation + (1|school)")
+model.set_cluster("school", ICC=0.2, n_clusters=20)
+model.set_effects("treatment=0.5, motivation=0.3")
+model.set_variable_type("treatment=binary")
+
+# Total sample_size is split across clusters: 1000 / 20 = 50 per cluster
+model.find_power(sample_size=1000)</code></pre>
+
+<hr>
+
+<h2>Quick Reference</h2>
+
+<table style="font-size: 0.85rem; border-spacing: 12px 0; border-collapse: separate;">
+  <thead>
+    <tr><th>Want to&hellip;</th><th>Use this</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Find required sample size</td><td><code>model.find_sample_size(target_test="effect_name")</code></td></tr>
+    <tr><td>Check power for specific N</td><td><code>model.find_power(sample_size=150, target_test="effect_name")</code></td></tr>
+    <tr><td><strong>Test robustness</strong></td><td><strong>Add <code>scenarios=True</code> to either method</strong></td></tr>
+    <tr><td><strong>Detailed output with plots</strong></td><td><strong>Add <code>summary="long"</code> to either method</strong></td></tr>
+    <tr><td>Test overall model</td><td><code>target_test="overall"</code></td></tr>
+    <tr><td>Test multiple effects</td><td><code>target_test="effect1, effect2"</code> or <code>"all"</code></td></tr>
+    <tr><td>Binary variables</td><td><code>model.set_variable_type("var=binary")</code></td></tr>
+    <tr><td><strong>Factor variables</strong></td><td><strong><code>model.set_variable_type("var=(factor,3)")</code></strong></td></tr>
+    <tr><td><strong>Factor effects</strong></td><td><strong><code>model.set_effects("var[2]=0.5, var[3]=0.7")</code></strong></td></tr>
+    <tr><td>Correlated predictors</td><td><code>model.set_correlations("corr(var1, var2)=0.4")</code></td></tr>
+    <tr><td>Multiple testing correction</td><td>Add <code>correction="FDR"</code>, <code>"Holm"</code>, or <code>"Bonferroni"</code></td></tr>
+    <tr><td>Mixed model (random intercept)</td><td><code>MCPower("y ~ x + (1|group)")</code> + <code>model.set_cluster(...)</code></td></tr>
+    <tr><td>Upload your own data</td><td><code>model.upload_data(dataframe)</code></td></tr>
+    <tr><td>Reproducible results</td><td><code>model.set_seed(42)</code></td></tr>
+    <tr><td>Get results as dict</td><td>Add <code>return_results=True</code> to either method</td></tr>
+    <tr><td>Stricter significance</td><td><code>model.set_alpha(0.01)</code></td></tr>
+    <tr><td>Target 90% power</td><td><code>model.set_power(90)</code></td></tr>
+  </tbody>
+</table>
+
+<hr>
+
+<h2>When to Use MCPower</h2>
+
+<h4>Use MCPower when you have:</h4>
+<ul>
+  <li>Interaction terms (<code>treatment*covariate</code>)</li>
+  <li>Categorical variables with multiple levels</li>
+  <li>Binary or non-normal variables</li>
+  <li>Correlated predictors</li>
+  <li>Multiple effects to test</li>
+  <li>Need to test assumption robustness</li>
+  <li>Complex models where traditional power analysis fails</li>
+</ul>
+
+<h4>Use traditional power analysis for:</h4>
+<ul>
+  <li>Models that are not yet implemented in MCPower</li>
+  <li>Simple models where all assumptions are clearly met</li>
+  <li>Very large analyses with tens of thousands of observations</li>
+</ul>
+
+<hr>
+
+<h2>Roadmap</h2>
+
+<ul>
+  <li><strong>Done</strong>: Linear Regression, Scenarios &amp; robustness analysis, Factor variables, C++ native backend (3x speedup)</li>
+  <li><strong>In progress</strong>: Mixed-Effects Models (random intercept), Logistic Regression, ANOVA</li>
+  <li><strong>Planned</strong>: Two-group comparison with alternative tests, Robust regression methods</li>
+</ul>
+
+<hr>
+
+<h2>Links &amp; Resources</h2>
+
+<ul>
+  <li><strong>Python package</strong>: <a href="https://github.com/pawlenartowicz/MCPower">GitHub &mdash; MCPower</a> &nbsp;|&nbsp; <a href="https://pypi.org/project/MCPower/">PyPI</a></li>
+  <li><strong>Desktop app</strong>: <a href="https://github.com/pawlenartowicz/mcpower-gui">GitHub &mdash; MCPower GUI</a> &nbsp;|&nbsp; <a href="https://github.com/pawlenartowicz/mcpower-gui/releases/latest">Downloads</a></li>
+  <li><strong>Issues</strong>: <a href="https://github.com/pawlenartowicz/MCPower/issues">Report bugs or request features</a></li>
+  <li><strong>Email</strong>: <a href="mailto:pawellenartowicz@europe.com">pawellenartowicz@europe.com</a></li>
+</ul>
+
+<hr>
+
+<h2>Citation</h2>
+
+<p style="text-align: justify;">GPL v3. If you use MCPower in research, please cite:</p>
+
+<p>Lenartowicz, P. (2025). MCPower: Monte Carlo Power Analysis for Statistical Models. Zenodo. DOI: <a href="https://doi.org/10.5281/zenodo.16502734">10.5281/zenodo.16502734</a></p>
+
+<pre><code>@software{mcpower2025,
+  author = {Pawel Lenartowicz},
+  title = {MCPower: Monte Carlo Power Analysis for Statistical Models},
+  year = {2025},
+  publisher = {Zenodo},
+  doi = {10.5281/zenodo.16502734},
+  url = {https://doi.org/10.5281/zenodo.16502734}
+}</code></pre>
