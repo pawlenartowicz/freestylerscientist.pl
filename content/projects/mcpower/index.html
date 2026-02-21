@@ -26,6 +26,12 @@ description: "MCPower: Monte Carlo power analysis for Python. Find sample sizes 
   <img src="mcpower_asci.png" alt="MCPower ASCII art" style="width:650px; height:auto;">
 </figure>
 
+<h2>What Is Power Analysis?</h2>
+
+<p style="text-align: justify;">Statistical power is the probability that a study will detect a real effect when one exists. A power analysis helps you determine what sample size you need to achieve a target power level (e.g., 80%), or what power you have at a given sample size. Without it, you risk running underpowered studies that waste resources and fail to find real effects.</p>
+
+<hr>
+
 <h2>Why MCPower?</h2>
 
 <p style="text-align: justify;"><strong>Traditional power analysis breaks down</strong> with interactions, correlated predictors, categorical variables, or non-normal data. MCPower uses simulation instead of formulas &mdash; it generates thousands of datasets exactly like yours, then sees how often your analysis finds real effects.</p>
@@ -36,6 +42,8 @@ description: "MCPower: Monte Carlo power analysis for Python. Find sample sizes 
   <li><strong>Categorical variables</strong>: Multi-level factors automatically handled</li>
   <li><strong>Two simple commands</strong>: Find sample size or check power</li>
   <li><strong>Scenario analysis</strong>: Test robustness under realistic conditions</li>
+  <li><strong>Upload your own data</strong>: Drop in a CSV and MCPower auto-detects variable types, preserves real distributions, and handles correlations. Especially useful with pilot data</li>
+  <li><strong>Mixed models</strong>: Random intercepts, random slopes, and nested structures via R-style syntax</li>
   <li><strong>Minimal math required</strong>: Just specify your model and effects</li>
 </ul>
 
@@ -52,7 +60,7 @@ description: "MCPower: Monte Carlo power analysis for Python. Find sample sizes 
   <tbody>
     <tr><td><strong>Windows</strong></td><td><a href="https://github.com/pawlenartowicz/mcpower-gui/releases/latest/download/MCPower.exe">MCPower.exe</a></td></tr>
     <tr><td><strong>Linux</strong></td><td><a href="https://github.com/pawlenartowicz/mcpower-gui/releases/latest/download/MCPower-linux">MCPower-linux</a></td></tr>
-    <tr><td><strong>macOS</strong></td><td><a href="https://github.com/pawlenartowicz/mcpower-gui/releases/latest/download/MCPower-macos">MCPower-macos</a></td></tr>
+    <tr><td><strong>macOS</strong></td><td><a href="https://github.com/pawlenartowicz/mcpower-gui/releases/latest/download/MCPower-macos.zip">MCPower-macos.zip</a></td></tr>
     <tr><td><strong>Alternative</strong></td><td><a href="https://sourceforge.net/projects/mcpower/">SourceForge</a></td></tr>
   </tbody>
 </table>
@@ -71,10 +79,10 @@ description: "MCPower: Monte Carlo power analysis for Python. Find sample sizes 
 
 <pre><code># python
 
-import mcpower
+from mcpower import MCPower
 
 # 1. Define your model (just like R)
-model = mcpower.MCPower("satisfaction = treatment + motivation")
+model = MCPower("satisfaction = treatment + motivation")
 
 # 2. Set effect sizes (how big you expect effects to be)
 model.set_effects("treatment=0.5, motivation=0.3")
@@ -124,9 +132,9 @@ treatment                                75           85           100
 
 <pre><code># python
 
-import mcpower
+from mcpower import MCPower
 
-model = mcpower.MCPower("outcome = treatment + age + baseline_score")
+model = MCPower("outcome = treatment + age + baseline_score")
 model.set_effects("treatment=0.6, age=0.2, baseline_score=0.8")
 model.set_variable_type("treatment=binary")
 
@@ -137,9 +145,9 @@ model.find_sample_size(target_test="treatment", from_size=100, to_size=500,
 
 <pre><code># python
 
-import mcpower
+from mcpower import MCPower
 
-model = mcpower.MCPower("conversion = treatment + user_type + treatment*user_type")
+model = MCPower("conversion = treatment + user_type + treatment*user_type")
 model.set_effects("treatment=0.4, user_type=0.3, treatment:user_type=0.5")
 model.set_variable_type("treatment=binary, user_type=binary")
 
@@ -149,9 +157,9 @@ model.find_power(sample_size=400, target_test="treatment:user_type", scenarios=T
 
 <pre><code># python
 
-import mcpower
+from mcpower import MCPower
 
-model = mcpower.MCPower("wellbeing = treatment + education + age")
+model = MCPower("wellbeing = treatment + education + age")
 model.set_variable_type("treatment=(factor,3), education=(factor,4)")
 model.set_effects("treatment[2]=0.4, treatment[3]=0.6, education[2]=0.3, education[3]=0.5, education[4]=0.7, age=0.2")
 
@@ -161,9 +169,9 @@ model.find_sample_size(target_test="treatment[2], treatment[3]", scenarios=True)
 
 <pre><code># python
 
-import mcpower
+from mcpower import MCPower
 
-model = mcpower.MCPower("wellbeing = income + education + social_support")
+model = MCPower("wellbeing = income + education + social_support")
 model.set_effects("income=0.4, education=0.3, social_support=0.6")
 model.set_correlations("corr(income, education)=0.5, corr(income, social_support)=0.3")
 
@@ -174,15 +182,44 @@ model.find_sample_size(target_test="all", from_size=200, to_size=800,
 
 <pre><code># python
 
-import mcpower
+from mcpower import MCPower
 
-model = mcpower.MCPower("satisfaction ~ treatment + motivation + (1|school)")
+model = MCPower("satisfaction ~ treatment + motivation + (1|school)")
 model.set_cluster("school", ICC=0.2, n_clusters=20)
 model.set_effects("treatment=0.5, motivation=0.3")
 model.set_variable_type("treatment=binary")
 
 # Total sample_size is split across clusters: 1000 / 20 = 50 per cluster
 model.find_power(sample_size=1000)</code></pre>
+
+<h4>Mixed-Effects Model (Random Slopes)</h4>
+
+<pre><code># python
+
+from mcpower import MCPower
+
+# Effect of x1 varies across clusters
+model = MCPower("y ~ x1 + (1 + x1|school)")
+model.set_cluster("school", ICC=0.2, n_clusters=20,
+                   random_slopes=["x1"], slope_variance=0.1,
+                   slope_intercept_corr=0.3)
+model.set_effects("x1=0.5")
+model.set_max_failed_simulations(0.30)
+model.find_power(sample_size=1000)</code></pre>
+
+<h4>Mixed-Effects Model (Nested Random Effects)</h4>
+
+<pre><code># python
+
+from mcpower import MCPower
+
+# Students in classrooms in schools
+model = MCPower("y ~ treatment + (1|school/classroom)")
+model.set_cluster("school", ICC=0.15, n_clusters=10)
+model.set_cluster("classroom", ICC=0.10, n_per_parent=3)  # 3 classrooms per school
+model.set_effects("treatment=0.5")
+model.set_max_failed_simulations(0.30)
+model.find_power(sample_size=1500)</code></pre>
 
 <hr>
 
@@ -203,8 +240,11 @@ model.find_power(sample_size=1000)</code></pre>
     <tr><td><strong>Factor variables</strong></td><td><strong><code>model.set_variable_type("var=(factor,3)")</code></strong></td></tr>
     <tr><td><strong>Factor effects</strong></td><td><strong><code>model.set_effects("var[2]=0.5, var[3]=0.7")</code></strong></td></tr>
     <tr><td>Correlated predictors</td><td><code>model.set_correlations("corr(var1, var2)=0.4")</code></td></tr>
-    <tr><td>Multiple testing correction</td><td>Add <code>correction="FDR"</code>, <code>"Holm"</code>, or <code>"Bonferroni"</code></td></tr>
+    <tr><td>Multiple testing correction</td><td>Add <code>correction="FDR"</code>, <code>"Holm"</code>, <code>"Bonferroni"</code>, or <code>"Tukey"</code></td></tr>
+    <tr><td>Post-hoc pairwise comparison</td><td><code>target_test="group[0] vs group[1]"</code> with <code>correction="tukey"</code></td></tr>
     <tr><td>Mixed model (random intercept)</td><td><code>MCPower("y ~ x + (1|group)")</code> + <code>model.set_cluster(...)</code></td></tr>
+    <tr><td>Random slopes</td><td><code>MCPower("y ~ x + (1+x|group)")</code> + <code>set_cluster(..., random_slopes=["x"], slope_variance=0.1)</code></td></tr>
+    <tr><td>Nested random effects</td><td><code>MCPower("y ~ x + (1|A/B)")</code> + two <code>set_cluster()</code> calls</td></tr>
     <tr><td>Upload your own data</td><td><code>model.upload_data(dataframe)</code></td></tr>
     <tr><td>Reproducible results</td><td><code>model.set_seed(42)</code></td></tr>
     <tr><td>Get results as dict</td><td>Add <code>return_results=True</code> to either method</td></tr>
@@ -240,8 +280,8 @@ model.find_power(sample_size=1000)</code></pre>
 <h2>Roadmap</h2>
 
 <ul>
-  <li><strong>Done</strong>: Linear Regression, Scenarios &amp; robustness analysis, Factor variables, C++ native backend (3x speedup)</li>
-  <li><strong>In progress</strong>: Mixed-Effects Models (random intercept), Logistic Regression, ANOVA</li>
+  <li><strong>Done</strong>: Linear Regression, Scenarios &amp; robustness analysis, Factor variables, C++ native backend (3x speedup), Mixed-Effects Models &mdash; random intercepts, random slopes, nested effects (experimental), ANOVA &amp; Post-Hoc Tests (Tukey HSD)</li>
+  <li><strong>In progress</strong>: Logistic Regression</li>
   <li><strong>Planned</strong>: Two-group comparison with alternative tests, Robust regression methods</li>
 </ul>
 
@@ -252,6 +292,7 @@ model.find_power(sample_size=1000)</code></pre>
 <ul>
   <li><strong>Python package</strong>: <a href="https://github.com/pawlenartowicz/MCPower">GitHub &mdash; MCPower</a> &nbsp;|&nbsp; <a href="https://pypi.org/project/MCPower/">PyPI</a></li>
   <li><strong>Desktop app</strong>: <a href="https://github.com/pawlenartowicz/mcpower-gui">GitHub &mdash; MCPower GUI</a> &nbsp;|&nbsp; <a href="https://github.com/pawlenartowicz/mcpower-gui/releases/latest">Downloads</a></li>
+  <li><strong>Documentation</strong>: <a href="https://github.com/pawlenartowicz/MCPower/wiki">MCPower Wiki</a> &mdash; <a href="https://github.com/pawlenartowicz/MCPower/wiki/Quick-Start">Quick Start</a>, <a href="https://github.com/pawlenartowicz/MCPower/wiki/Model-Specification">Model Specification</a>, <a href="https://github.com/pawlenartowicz/MCPower/wiki/Effect-Sizes">Effect Sizes</a>, <a href="https://github.com/pawlenartowicz/MCPower/wiki/Mixed-Effects-Models">Mixed-Effects Models</a>, <a href="https://github.com/pawlenartowicz/MCPower/wiki/ANOVA-and-Post-Hoc-Tests">ANOVA &amp; Post-Hoc Tests</a>, <a href="https://github.com/pawlenartowicz/MCPower/wiki/API-Reference">API Reference</a></li>
   <li><strong>Issues</strong>: <a href="https://github.com/pawlenartowicz/MCPower/issues">Report bugs or request features</a></li>
   <li><strong>Email</strong>: <a href="mailto:pawellenartowicz@europe.com">pawellenartowicz@europe.com</a></li>
 </ul>
