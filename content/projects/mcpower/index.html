@@ -43,7 +43,7 @@ description: "MCPower: Monte Carlo power analysis for Python. Find sample sizes 
   <li><strong>Two simple commands</strong>: Find sample size or check power</li>
   <li><strong>Scenario analysis</strong>: Test robustness under realistic conditions</li>
   <li><strong>Upload your own data</strong>: Drop in a CSV and MCPower auto-detects variable types, preserves real distributions, and handles correlations. Especially useful with pilot data</li>
-  <li><strong>Mixed models</strong>: Random intercepts, random slopes, and nested structures via R-style syntax</li>
+  <li><strong>Mixed models</strong>: Random intercepts, random slopes, and nested structures via R-style syntax &mdash; <a href="/reports/lme4-validation-report.html">validated against R&rsquo;s lme4</a> across 95 scenarios</li>
   <li><strong>Minimal math required</strong>: Just specify your model and effects</li>
 </ul>
 
@@ -280,7 +280,7 @@ model.find_power(sample_size=1500)</code></pre>
 <h2>Roadmap</h2>
 
 <ul>
-  <li><strong>Done</strong>: Linear Regression, Scenarios &amp; robustness analysis, Factor variables, C++ native backend (3x speedup), Mixed-Effects Models &mdash; random intercepts, random slopes, nested effects (experimental), ANOVA &amp; Post-Hoc Tests (Tukey HSD)</li>
+  <li><strong>Done</strong>: Linear Regression, Scenarios &amp; robustness analysis, Factor variables, C++ native backend (3x speedup), Mixed-Effects Models &mdash; random intercepts, random slopes, nested effects (<a href="/reports/lme4-validation-report.html">validated against lme4</a>), ANOVA &amp; Post-Hoc Tests (Tukey HSD)</li>
   <li><strong>In progress</strong>: Logistic Regression</li>
   <li><strong>Planned</strong>: Two-group comparison with alternative tests, Robust regression methods</li>
 </ul>
@@ -293,6 +293,7 @@ model.find_power(sample_size=1500)</code></pre>
   <li><strong>Python package</strong>: <a href="https://github.com/pawlenartowicz/MCPower">GitHub &mdash; MCPower</a> &nbsp;|&nbsp; <a href="https://pypi.org/project/MCPower/">PyPI</a></li>
   <li><strong>Desktop app</strong>: <a href="https://github.com/pawlenartowicz/mcpower-gui">GitHub &mdash; MCPower GUI</a> &nbsp;|&nbsp; <a href="https://github.com/pawlenartowicz/mcpower-gui/releases/latest">Downloads</a></li>
   <li><strong>Documentation</strong>: <a href="https://github.com/pawlenartowicz/MCPower/wiki">MCPower Wiki</a> &mdash; <a href="https://github.com/pawlenartowicz/MCPower/wiki/Quick-Start">Quick Start</a>, <a href="https://github.com/pawlenartowicz/MCPower/wiki/Model-Specification">Model Specification</a>, <a href="https://github.com/pawlenartowicz/MCPower/wiki/Effect-Sizes">Effect Sizes</a>, <a href="https://github.com/pawlenartowicz/MCPower/wiki/Mixed-Effects-Models">Mixed-Effects Models</a>, <a href="https://github.com/pawlenartowicz/MCPower/wiki/ANOVA-and-Post-Hoc-Tests">ANOVA &amp; Post-Hoc Tests</a>, <a href="https://github.com/pawlenartowicz/MCPower/wiki/API-Reference">API Reference</a></li>
+  <li><strong>Validation</strong>: <a href="/reports/lme4-validation-report.html">LME4 Validation Report</a> &mdash; 230/230 scenario-strategy combinations pass (<a href="https://github.com/pawlenartowicz/MCPower/wiki/Concept-LME-Validation">methodology</a>)</li>
   <li><strong>Issues</strong>: <a href="https://github.com/pawlenartowicz/MCPower/issues">Report bugs or request features</a></li>
   <li><strong>Email</strong>: <a href="mailto:pawellenartowicz@europe.com">pawellenartowicz@europe.com</a></li>
 </ul>
