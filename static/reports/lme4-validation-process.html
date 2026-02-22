@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCPower LME Validation Process — Technical Documentation</title>
+<style>
+  :root {
+    --bg: #f8f9fa;
+    --card: #ffffff;
+    --border: #e0e4e8;
+    --text: #1a1a2e;
+    --text-muted: #5a6270;
+    --accent: #2563eb;
+    --accent-light: #dbeafe;
+    --green: #059669;
+    --green-light: #d1fae5;
+    --amber: #d97706;
+    --amber-light: #fef3c7;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --purple: #7c3aed;
+    --purple-light: #ede9fe;
+    --code-bg: #1e293b;
+    --code-text: #e2e8f0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* Header */
+  .hero {
+    text-align: center;
+    padding: 60px 20px 48px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .hero h1 {
+    font-size: 2.4em;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    margin-bottom: 12px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero .subtitle {
+    font-size: 1.15em;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .hero .tags {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    display: inline-block;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.82em;
+    font-weight: 600;
+  }
+  .tag-blue { background: var(--accent-light); color: var(--accent); }
+  .tag-green { background: var(--green-light); color: var(--green); }
+  .tag-purple { background: var(--purple-light); color: var(--purple); }
+
+  /* TOC */
+  .toc {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 48px;
+  }
+  .toc h2 {
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+  .toc ol {
+    list-style: none;
+    counter-reset: toc;
+  }
+  .toc ol li {
+    counter-increment: toc;
+    margin-bottom: 8px;
+  }
+  .toc ol li::before {
+    content: counter(toc) ".";
+    font-weight: 700;
+    color: var(--accent);
+    margin-right: 10px;
+    display: inline-block;
+    width: 24px;
+  }
+  .toc a {
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .toc a:hover { color: var(--accent); }
+
+  /* Sections */
+  section { margin-bottom: 56px; }
+
+  h2 {
+    font-size: 1.6em;
+    font-weight: 700;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+    letter-spacing: -0.02em;
+  }
+  h2 .num {
+    color: var(--accent);
+    font-weight: 800;
+    margin-right: 6px;
+  }
+
+  h3 {
+    font-size: 1.15em;
+    font-weight: 700;
+    margin: 28px 0 12px;
+    color: var(--text);
+  }
+
+  p { margin-bottom: 14px; }
+
+  /* Cards */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin: 20px 0;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .card-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3em;
+    flex-shrink: 0;
+  }
+  .card-icon-blue { background: var(--accent-light); }
+  .card-icon-green { background: var(--green-light); }
+  .card-icon-purple { background: var(--purple-light); }
+  .card-icon-amber { background: var(--amber-light); }
+  .card-title {
+    font-weight: 700;
+    font-size: 1.05em;
+  }
+  .card-subtitle {
+    font-size: 0.85em;
+    color: var(--text-muted);
+  }
+
+  /* Strategy cards */
+  .strategy-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin: 20px 0;
+  }
+
+  .strategy-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    border-left: 4px solid var(--accent);
+  }
+  .strategy-card.s2 { border-left-color: var(--green); }
+  .strategy-card.s3 { border-left-color: var(--purple); }
+  .strategy-card.s4 { border-left-color: var(--amber); }
+
+  .strategy-label {
+    font-size: 0.78em;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .s1-label { color: var(--accent); }
+  .s2-label { color: var(--green); }
+  .s3-label { color: var(--purple); }
+  .s4-label { color: var(--amber); }
+
+  .strategy-card h3 {
+    margin: 0 0 10px;
+    font-size: 1.2em;
+  }
+
+  /* Flow diagram */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 24px 0;
+    position: relative;
+  }
+  .flow-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 0;
+    position: relative;
+  }
+  .flow-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85em;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  .flow-dot.green { background: var(--green); }
+  .flow-dot.purple { background: var(--purple); }
+  .flow-dot.amber { background: var(--amber); }
+  .flow-line {
+    position: absolute;
+    left: 17px;
+    top: 52px;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+  .flow-step:last-child .flow-line { display: none; }
+  .flow-content { flex: 1; padding-top: 5px; }
+  .flow-content strong { display: block; margin-bottom: 4px; }
+  .flow-content p { margin-bottom: 0; font-size: 0.92em; color: var(--text-muted); }
+
+  /* Code blocks */
+  pre {
+    background: var(--code-bg);
+    color: var(--code-text);
+    border-radius: 10px;
+    padding: 20px 24px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.85em;
+    line-height: 1.6;
+    margin: 16px 0;
+  }
+  code {
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.9em;
+  }
+  :not(pre) > code {
+    background: #f1f5f9;
+    padding: 2px 7px;
+    border-radius: 4px;
+    color: #0f172a;
+  }
+
+  /* R code highlighting - manual */
+  .kw { color: #c084fc; }  /* keyword */
+  .fn { color: #60a5fa; }  /* function */
+  .str { color: #34d399; } /* string */
+  .cm { color: #64748b; }  /* comment */
+  .num { color: #fbbf24; } /* number */
+  .op { color: #94a3b8; }  /* operator */
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.9em;
+  }
+  th, td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    font-weight: 700;
+    font-size: 0.82em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    background: var(--bg);
+  }
+  tr:last-child td { border-bottom: none; }
+
+  /* Threshold table */
+  .threshold-table td:first-child { font-weight: 600; }
+  .threshold-table td:nth-child(2) {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88em;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* Details/Accordion */
+  details {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 16px 0;
+    overflow: hidden;
+  }
+  details summary {
+    padding: 14px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.95em;
+  }
+  details summary:hover { background: var(--bg); }
+  details[open] summary { border-bottom: 1px solid var(--border); }
+  details .detail-body { padding: 20px; }
+
+  /* Diagram: comparison SVG */
+  .diagram-wrap {
+    text-align: center;
+    margin: 28px 0;
+  }
+  .diagram-wrap svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Lists */
+  ul, ol { margin: 10px 0 14px 24px; }
+  li { margin-bottom: 6px; }
+
+  /* Callout */
+  .callout {
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin: 18px 0;
+    font-size: 0.93em;
+    border-left: 4px solid;
+  }
+  .callout-info {
+    background: var(--accent-light);
+    border-color: var(--accent);
+    color: #1e40af;
+  }
+  .callout-warn {
+    background: var(--amber-light);
+    border-color: var(--amber);
+    color: #92400e;
+  }
+  .callout-success {
+    background: var(--green-light);
+    border-color: var(--green);
+    color: #065f46;
+  }
+
+  /* Formula styling */
+  .formula {
+    display: block;
+    text-align: center;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 1.1em;
+    padding: 16px;
+    margin: 16px 0;
+    background: var(--bg);
+    border-radius: 8px;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85em;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 1.7em; }
+    .container { padding: 20px 16px 40px; }
+    pre { padding: 14px 16px; font-size: 0.8em; }
+    .card { padding: 18px 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ============================== HERO ============================== -->
+<div class="hero">
+  <h1>MCPower <span>LME Validation</span> Process</h1>
+  <p class="subtitle">
+    How we validate MCPower's custom C++ mixed-effects solver
+    against R's <code>lme4</code> package across 75+ scenarios
+  </p>
+  <div class="tags">
+    <span class="tag tag-blue">lme4 / lmerTest</span>
+    <span class="tag tag-green">Monte Carlo Simulation</span>
+    <span class="tag tag-purple">4 Independent Strategies</span>
+  </div>
+</div>
+
+<!-- ============================== TOC ============================== -->
+<nav class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#context">What is MCPower?</a></li>
+    <li><a href="#why">Why validate against lme4?</a></li>
+    <li><a href="#overview">Validation framework overview</a></li>
+    <li><a href="#strategy1">Strategy 1 &mdash; External Data Agreement</a></li>
+    <li><a href="#strategy2">Strategy 2 &mdash; MCPower DGP Validation</a></li>
+    <li><a href="#strategy3">Strategy 3 &mdash; Parallel Power Simulation</a></li>
+    <li><a href="#strategy4">Strategy 4 &mdash; Statistical Power Comparison (Z-test + FDR)</a></li>
+    <li><a href="#scenarios">Scenario Matrix</a></li>
+    <li><a href="#thresholds">Pass/Fail Thresholds</a></li>
+    <li><a href="#r-details">R Implementation Details</a></li>
+    <li><a href="#running">Running the Validation</a></li>
+    <li><a href="#reports">Reading the Reports</a></li>
+  </ol>
+</nav>
+
+<!-- ============================== 1. CONTEXT ============================== -->
+<section id="context">
+  <h2><span class="num">1.</span> What is MCPower?</h2>
+  <p>
+    <strong>MCPower</strong> is a Monte Carlo power analysis library for complex statistical models.
+    It estimates the probability (power) that a study will detect a true effect at a given sample size,
+    using simulation rather than closed-form formulas.
+  </p>
+  <p>
+    Its <strong>LME (Linear Mixed-Effects) module</strong> handles clustered/hierarchical data &mdash;
+    students nested in schools, patients nested in hospitals, repeated measures within subjects.
+    Instead of relying on R or Python's <code>statsmodels</code>, MCPower uses a
+    <strong>custom C++ solver</strong> based on the profiled-deviance approach from
+    Bates et al. (2015), achieving roughly <strong>200&times; speedup</strong> over pure Python.
+  </p>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon card-icon-blue">&#9881;</div>
+      <div>
+        <div class="card-title">Three solver paths</div>
+        <div class="card-subtitle">All implemented in C++ via pybind11 + Eigen</div>
+      </div>
+    </div>
+    <table>
+      <tr><th>Model Type</th><th>R Formula</th><th>Solver</th></tr>
+      <tr>
+        <td>Random intercept</td>
+        <td><code>y ~ x + (1|group)</code></td>
+        <td>Brent's 1D optimization, block-diagonal structure</td>
+      </tr>
+      <tr>
+        <td>Random slopes</td>
+        <td><code>y ~ x + (1 + x|group)</code></td>
+        <td>L-BFGS-B with G-matrix parameterization</td>
+      </tr>
+      <tr>
+        <td>Nested effects</td>
+        <td><code>y ~ x + (1|school/class)</code></td>
+        <td>Two-level Woodbury decomposition</td>
+      </tr>
+    </table>
+  </div>
+
+  <p>
+    Statistical inference uses <strong>Likelihood Ratio (LR) tests</strong> for overall significance
+    and <strong>Wald <em>z</em>-tests</strong> (with REML) for individual fixed effects &mdash;
+    the same testing framework that <code>lmerTest</code> provides in R.
+  </p>
+</section>
+
+<!-- ============================== 2. WHY ============================== -->
+<section id="why">
+  <h2><span class="num">2.</span> Why validate against lme4?</h2>
+  <p>
+    R's <code>lme4</code> package (Bates, M&auml;chler, Bolker &amp; Walker, 2015) is the
+    <strong>gold standard</strong> for fitting linear mixed-effects models.
+    It is used in tens of thousands of published studies across psychology, education,
+    ecology, and medicine. By validating MCPower's solver against <code>lme4</code>, we establish
+    that our custom implementation produces statistically equivalent results.
+  </p>
+
+  <div class="callout callout-info">
+    <strong>What we're testing:</strong> fixed-effect estimates (&beta;), standard errors,
+    significance decisions, variance components (&tau;&sup2;, &sigma;&sup2;), and power curves.
+    We do <em>not</em> expect bit-identical results &mdash; different optimizers may converge
+    to slightly different parameter values &mdash; but the <em>conclusions</em> should match.
+  </div>
+</section>
+
+<!-- ============================== 3. OVERVIEW ============================== -->
+<section id="overview">
+  <h2><span class="num">3.</span> Validation framework overview</h2>
+  <p>
+    The framework uses <strong>four independent, complementary strategies</strong> that together
+    test the solver, the data-generating process (DGP), and end-to-end power estimation:
+  </p>
+
+  <div class="strategy-grid">
+    <div class="strategy-card">
+      <div class="strategy-label s1-label">Strategy 1</div>
+      <h3>External Data Agreement</h3>
+      <p>
+        Generate data <strong>externally</strong> with NumPy (independent of both MCPower and R).
+        Feed the <em>same datasets</em> to both solvers. Compare significance decisions.
+      </p>
+      <p><strong>Tests:</strong> solver correctness in isolation</p>
+    </div>
+
+    <div class="strategy-card s2">
+      <div class="strategy-label s2-label">Strategy 2</div>
+      <h3>MCPower DGP Validation</h3>
+      <p>
+        Generate data <strong>via MCPower's own pipeline</strong>. Fit with both MCPower and
+        <code>lme4</code>. Compare significance decisions.
+      </p>
+      <p><strong>Tests:</strong> MCPower's data-generating process + solver together</p>
+    </div>
+
+    <div class="strategy-card s3">
+      <div class="strategy-label s3-label">Strategy 3</div>
+      <h3>Parallel Power Simulation</h3>
+      <p>
+        Both MCPower and R independently generate data and compute power (proportion of
+        significant results across <em>N</em> simulations). Compare power estimates.
+      </p>
+      <p><strong>Tests:</strong> end-to-end power accuracy (DGP + solver + aggregation)</p>
+    </div>
+
+    <div class="strategy-card s4">
+      <div class="strategy-label s4-label">Strategy 4</div>
+      <h3>Statistical Power Comparison (Z-test + FDR)</h3>
+      <p>
+        Runs <strong>independently</strong> &mdash; reuses S3 power estimates when available,
+        but runs its own parallel power simulations for scenarios not covered by S3.
+        Applies a <strong>two-proportion z-test</strong> to each scenario, then
+        <strong>Benjamini-Hochberg FDR correction</strong> across all scenarios.
+        Replaces the fixed 5pp threshold with a proper statistical test.
+      </p>
+      <p><strong>Tests:</strong> whether power differences are statistically significant (not just sampling noise)</p>
+      <p><strong>Note:</strong> Sensitivity scenarios (~50) use <em>only</em> S4 &mdash; S1/S2/S3 are reserved for core scenarios.</p>
+    </div>
+  </div>
+
+  <!-- Pipeline flow diagram -->
+  <div class="diagram-wrap">
+    <svg width="800" height="380" viewBox="0 0 800 380" xmlns="http://www.w3.org/2000/svg">
+      <!-- Background -->
+      <rect width="800" height="380" fill="#f8f9fa" rx="12"/>
+
+      <!-- Title -->
+      <text x="400" y="30" text-anchor="middle" font-size="14" font-weight="700" fill="#1a1a2e">Core Validation Architecture (Strategies 1&ndash;3)</text>
+
+      <!-- Strategy 1 -->
+      <rect x="30" y="55" width="230" height="295" rx="8" fill="white" stroke="#2563eb" stroke-width="2"/>
+      <rect x="30" y="55" width="230" height="32" rx="8" fill="#2563eb"/>
+      <rect x="30" y="75" width="230" height="12" fill="#2563eb"/>
+      <text x="145" y="76" text-anchor="middle" font-size="12" font-weight="700" fill="white">STRATEGY 1: External Data</text>
+
+      <rect x="55" y="100" width="180" height="34" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1"/>
+      <text x="145" y="122" text-anchor="middle" font-size="11" fill="#1e40af">NumPy generates data</text>
+
+      <line x1="145" y1="134" x2="145" y2="148" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <rect x="55" y="148" width="80" height="34" rx="6" fill="#e0f2fe" stroke="#2563eb" stroke-width="1"/>
+      <text x="95" y="170" text-anchor="middle" font-size="10" fill="#1e40af">MCPower</text>
+
+      <rect x="155" y="148" width="80" height="34" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1"/>
+      <text x="195" y="170" text-anchor="middle" font-size="10" fill="#92400e">lme4 (R)</text>
+
+      <line x1="95" y1="182" x2="95" y2="210" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="195" y1="182" x2="195" y2="210" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="95" y1="210" x2="195" y2="210" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="145" y1="210" x2="145" y2="225" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <rect x="55" y="225" width="180" height="34" rx="6" fill="#d1fae5" stroke="#059669" stroke-width="1"/>
+      <text x="145" y="247" text-anchor="middle" font-size="10" fill="#065f46">Compare significance</text>
+
+      <rect x="55" y="270" width="180" height="34" rx="6" fill="#d1fae5" stroke="#059669" stroke-width="1"/>
+      <text x="145" y="292" text-anchor="middle" font-size="10" fill="#065f46">Compare parameters</text>
+
+      <text x="145" y="325" text-anchor="middle" font-size="10" font-weight="600" fill="#1e40af">Same data &#x2192; same answer?</text>
+
+      <!-- Strategy 2 -->
+      <rect x="285" y="55" width="230" height="295" rx="8" fill="white" stroke="#059669" stroke-width="2"/>
+      <rect x="285" y="55" width="230" height="32" rx="8" fill="#059669"/>
+      <rect x="285" y="75" width="230" height="12" fill="#059669"/>
+      <text x="400" y="76" text-anchor="middle" font-size="12" font-weight="700" fill="white">STRATEGY 2: MCPower DGP</text>
+
+      <rect x="310" y="100" width="180" height="34" rx="6" fill="#d1fae5" stroke="#059669" stroke-width="1"/>
+      <text x="400" y="122" text-anchor="middle" font-size="11" fill="#065f46">MCPower generates data</text>
+
+      <line x1="400" y1="134" x2="400" y2="148" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <rect x="310" y="148" width="80" height="34" rx="6" fill="#e0f2fe" stroke="#2563eb" stroke-width="1"/>
+      <text x="350" y="170" text-anchor="middle" font-size="10" fill="#1e40af">MCPower</text>
+
+      <rect x="410" y="148" width="80" height="34" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1"/>
+      <text x="450" y="170" text-anchor="middle" font-size="10" fill="#92400e">lme4 (R)</text>
+
+      <line x1="350" y1="182" x2="350" y2="210" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="450" y1="182" x2="450" y2="210" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="350" y1="210" x2="450" y2="210" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="400" y1="210" x2="400" y2="225" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <rect x="310" y="225" width="180" height="34" rx="6" fill="#d1fae5" stroke="#059669" stroke-width="1"/>
+      <text x="400" y="247" text-anchor="middle" font-size="10" fill="#065f46">Compare significance</text>
+
+      <text x="400" y="290" text-anchor="middle" font-size="10" font-weight="600" fill="#065f46">DGP pipeline correct?</text>
+
+      <!-- Strategy 3 -->
+      <rect x="540" y="55" width="230" height="295" rx="8" fill="white" stroke="#7c3aed" stroke-width="2"/>
+      <rect x="540" y="55" width="230" height="32" rx="8" fill="#7c3aed"/>
+      <rect x="540" y="75" width="230" height="12" fill="#7c3aed"/>
+      <text x="655" y="76" text-anchor="middle" font-size="12" font-weight="700" fill="white">STRATEGY 3: Parallel Power</text>
+
+      <rect x="565" y="100" width="80" height="48" rx="6" fill="#e0f2fe" stroke="#2563eb" stroke-width="1"/>
+      <text x="605" y="120" text-anchor="middle" font-size="10" fill="#1e40af">MCPower</text>
+      <text x="605" y="136" text-anchor="middle" font-size="9" fill="#1e40af">DGP + fit</text>
+
+      <rect x="665" y="100" width="80" height="48" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1"/>
+      <text x="705" y="120" text-anchor="middle" font-size="10" fill="#92400e">R (lme4)</text>
+      <text x="705" y="136" text-anchor="middle" font-size="9" fill="#92400e">DGP + fit</text>
+
+      <line x1="605" y1="148" x2="605" y2="175" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+      <line x1="705" y1="148" x2="705" y2="175" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <rect x="565" y="175" width="80" height="34" rx="6" fill="#e0f2fe" stroke="#2563eb" stroke-width="1"/>
+      <text x="605" y="197" text-anchor="middle" font-size="10" fill="#1e40af">Power<tspan font-size="7" baseline-shift="sub">MC</tspan></text>
+
+      <rect x="665" y="175" width="80" height="34" rx="6" fill="#fef3c7" stroke="#d97706" stroke-width="1"/>
+      <text x="705" y="197" text-anchor="middle" font-size="10" fill="#92400e">Power<tspan font-size="7" baseline-shift="sub">R</tspan></text>
+
+      <line x1="605" y1="209" x2="605" y2="240" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="705" y1="209" x2="705" y2="240" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="605" y1="240" x2="705" y2="240" stroke="#94a3b8" stroke-width="1.5"/>
+      <line x1="655" y1="240" x2="655" y2="255" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+      <rect x="575" y="255" width="160" height="34" rx="6" fill="#ede9fe" stroke="#7c3aed" stroke-width="1"/>
+      <text x="655" y="277" text-anchor="middle" font-size="10" fill="#5b21b6">|diff| &#x2264; 5 pp?</text>
+
+      <text x="655" y="315" text-anchor="middle" font-size="10" font-weight="600" fill="#5b21b6">End-to-end power match?</text>
+
+      <!-- Arrow marker definition -->
+      <defs>
+        <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+</section>
+
+<!-- ============================== 4. STRATEGY 1 ============================== -->
+<section id="strategy1">
+  <h2><span class="num">4.</span> Strategy 1 &mdash; External Data Agreement</h2>
+
+  <p>
+    This strategy isolates the <strong>solver</strong> from everything else. Data is generated
+    by a third party (NumPy) so neither MCPower nor R influences the data-generating process.
+    Both solvers receive identical datasets and we compare their conclusions.
+  </p>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-dot">1</div>
+      <div class="flow-content">
+        <strong>Generate datasets with NumPy</strong>
+        <p>
+          100 datasets per scenario: 50 with true effect (&beta; &ne; 0) and 50 null (&beta; = 0).
+          Predictors are i.i.d. <em>N</em>(0, 1). Random intercepts drawn from <em>N</em>(0, &tau;&sup2;).
+          All written to a single CSV file with a <code>dataset_id</code> column.
+        </p>
+      </div>
+      <div class="flow-line"></div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-dot">2</div>
+      <div class="flow-content">
+        <strong>Fit with MCPower's C++ solver</strong>
+        <p>
+          Parse CSV, group by <code>dataset_id</code>, call <code>_lme_analysis_wrapper()</code>
+          for each dataset. Extract: converged, significant (LR test), individual significance (Wald).
+        </p>
+      </div>
+      <div class="flow-line"></div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-dot amber">3</div>
+      <div class="flow-content">
+        <strong>Fit with R lme4 (via subprocess)</strong>
+        <p>
+          Call <code>Rscript fit_lme4.R</code> with the same CSV. R fits
+          <code>lmer()</code> with REML (via <code>lmerTest</code> for p-values),
+          then performs an LR test (full vs. intercept-only null, ML refit).
+          Results returned as JSON on stdout.
+        </p>
+      </div>
+      <div class="flow-line"></div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-dot green">4</div>
+      <div class="flow-content">
+        <strong>Compare results</strong>
+        <p>
+          <strong>Significance agreement:</strong> proportion of datasets where both solvers
+          agree on reject/fail-to-reject. Threshold: &ge; 95%.<br>
+          <strong>Cohen's &kappa;:</strong> agreement corrected for chance from the 2&times;2 table.<br>
+          <strong>Parameter recovery:</strong> Pearson correlations of &beta;, SE, &tau;&sup2;, &sigma;&sup2; estimates.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <details>
+    <summary>Data-Generating Process (DGP) &mdash; mathematical detail</summary>
+    <div class="detail-body">
+      <h3>Random Intercept Model</h3>
+      <div class="formula">
+        y<sub>ij</sub> = X<sub>ij</sub>&beta; + b<sub>j</sub> + &epsilon;<sub>ij</sub>
+        &emsp; where &emsp;
+        b<sub>j</sub> ~ N(0, &tau;&sup2;), &ensp;
+        &epsilon;<sub>ij</sub> ~ N(0, 1)
+      </div>
+      <p>
+        Variance decomposition follows from the ICC definition. Since predictors are standardized
+        N(0, 1), the explained variance by fixed effects equals &Sigma;&beta;<sub>k</sub>&sup2;.
+        The within-group variance is:
+      </p>
+      <div class="formula">
+        &sigma;&sup2;<sub>within</sub> = 1 + &Sigma;&beta;<sub>k</sub>&sup2;
+        &emsp;&rArr;&emsp;
+        &tau;&sup2; = ICC / (1 &minus; ICC) &times; &sigma;&sup2;<sub>within</sub>
+      </div>
+
+      <h3>Random Slopes Model</h3>
+      <div class="formula">
+        y<sub>ij</sub> = X<sub>ij</sub>&beta; + b<sub>0j</sub> + b<sub>1j</sub>x<sub>1ij</sub> + &epsilon;<sub>ij</sub>
+      </div>
+      <p>where the random effects vector [b<sub>0j</sub>, b<sub>1j</sub>] follows:</p>
+      <div class="formula">
+        [b<sub>0j</sub>, b<sub>1j</sub>]<sup>T</sup> ~ N(0, G)
+        &emsp; with &emsp;
+        G = [&tau;&sup2;<sub>int</sub>, &rho;&tau;<sub>int</sub>&tau;<sub>slope</sub> ;
+        &rho;&tau;<sub>int</sub>&tau;<sub>slope</sub>, &tau;&sup2;<sub>slope</sub>]
+      </div>
+
+      <h3>Nested Model</h3>
+      <div class="formula">
+        y<sub>ijk</sub> = X<sub>ijk</sub>&beta; + b<sub>j</sub><sup>school</sup> + b<sub>jk</sub><sup>classroom</sup> + &epsilon;<sub>ijk</sub>
+      </div>
+      <p>
+        Two independent random effects: school-level (ICC<sub>school</sub>) and
+        classroom-within-school (ICC<sub>classroom</sub>), each with their own variance
+        component derived from the respective ICC.
+      </p>
+    </div>
+  </details>
+
+  <details>
+    <summary>R code used for fitting (fit_lme4.R)</summary>
+    <div class="detail-body">
+<pre><span class="cm"># Fit REML model (lmerTest provides Satterthwaite p-values)</span>
+fit <span class="op">&lt;-</span> <span class="fn">lmer</span>(<span class="fn">as.formula</span>(formula_str), data <span class="op">=</span> d, REML <span class="op">=</span> <span class="kw">TRUE</span>,
+            control <span class="op">=</span> <span class="fn">lmerControl</span>(optimizer <span class="op">=</span> <span class="str">"bobyqa"</span>,
+                                    optCtrl <span class="op">=</span> <span class="fn">list</span>(maxfun <span class="op">=</span> <span class="num">50000</span>)))
+
+<span class="cm"># Extract fixed effects (skip intercept)</span>
+coefs <span class="op">&lt;-</span> <span class="fn">summary</span>(fit)$coefficients
+beta    <span class="op">&lt;-</span> coefs[<span class="op">-</span><span class="num">1</span>, <span class="str">"Estimate"</span>]
+se      <span class="op">&lt;-</span> coefs[<span class="op">-</span><span class="num">1</span>, <span class="str">"Std. Error"</span>]
+pvalues <span class="op">&lt;-</span> coefs[<span class="op">-</span><span class="num">1</span>, <span class="str">"Pr(>|t|)"</span>]
+
+<span class="cm"># Variance components</span>
+vc    <span class="op">&lt;-</span> <span class="fn">as.data.frame</span>(<span class="fn">VarCorr</span>(fit))
+tau2  <span class="op">&lt;-</span> vc$vcov[vc$grp <span class="op">==</span> <span class="str">"g"</span>]
+sigma2 <span class="op">&lt;-</span> <span class="fn">sigma</span>(fit)<span class="op">^</span><span class="num">2</span>
+
+<span class="cm"># Likelihood Ratio Test: full vs null (intercept-only + RE)</span>
+null_fit <span class="op">&lt;-</span> <span class="fn">lmer</span>(y <span class="op">~</span> <span class="num">1</span> <span class="op">+</span> (<span class="num">1</span> <span class="op">|</span> g), data <span class="op">=</span> d, REML <span class="op">=</span> <span class="kw">FALSE</span>,
+                 control <span class="op">=</span> <span class="fn">lmerControl</span>(optimizer <span class="op">=</span> <span class="str">"bobyqa"</span>,
+                                         optCtrl <span class="op">=</span> <span class="fn">list</span>(maxfun <span class="op">=</span> <span class="num">50000</span>)))
+full_ml <span class="op">&lt;-</span> <span class="fn">update</span>(fit, REML <span class="op">=</span> <span class="kw">FALSE</span>)
+lr_test <span class="op">&lt;-</span> <span class="fn">anova</span>(null_fit, full_ml)
+lr_pvalue <span class="op">&lt;-</span> lr_test$<span class="str">`Pr(>Chisq)`</span>[<span class="num">2</span>]
+significant <span class="op">&lt;-</span> <span class="op">!</span><span class="fn">is.na</span>(lr_pvalue) <span class="op">&amp;&amp;</span> lr_pvalue <span class="op">&lt;</span> <span class="num">0.05</span></pre>
+
+      <div class="callout callout-info">
+        <strong>Key choices:</strong>
+        REML for parameter estimation (better small-sample properties),
+        ML refit for the LR test (required for comparing models with different fixed effects),
+        <code>bobyqa</code> optimizer (robust for mixed models), max 50,000 function evaluations.
+      </div>
+    </div>
+  </details>
+</section>
+
+<!-- ============================== 5. STRATEGY 2 ============================== -->
+<section id="strategy2">
+  <h2><span class="num">5.</span> Strategy 2 &mdash; MCPower DGP Validation</h2>
+
+  <p>
+    Strategy 1 tests the solver in isolation using third-party data. Strategy 2 adds MCPower's
+    <strong>data-generating process</strong> to the test.
+    Data is generated through MCPower's full pipeline (the same code path used during power analysis),
+    then <em>both</em> MCPower and R fit models on these datasets.
+  </p>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-dot green">1</div>
+      <div class="flow-content">
+        <strong>MCPower generates datasets</strong>
+        <p>
+          Uses MCPower's internal backend: predictor generation, factor handling,
+          random effect sampling, and response generation.
+          Writes 100 datasets to CSV in the same stacked format.
+        </p>
+      </div>
+      <div class="flow-line"></div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-dot">2</div>
+      <div class="flow-content">
+        <strong>Both solvers fit the same data</strong>
+        <p>
+          MCPower already fitted each dataset during generation.
+          R fits the same datasets via <code>lme4</code>.
+        </p>
+      </div>
+      <div class="flow-line"></div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-dot green">3</div>
+      <div class="flow-content">
+        <strong>Compare significance decisions</strong>
+        <p>
+          Same agreement metric as Strategy 1. If Strategy 1 passes but Strategy 2 fails,
+          it points to a problem in MCPower's data generation, not the solver.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout callout-warn">
+    <strong>Diagnostic power:</strong> By comparing Strategy 1 and Strategy 2 results,
+    you can isolate whether a disagreement comes from the solver
+    (would show up in both) or the DGP (would only show up in Strategy 2).
+  </div>
+</section>
+
+<!-- ============================== 6. STRATEGY 3 ============================== -->
+<section id="strategy3">
+  <h2><span class="num">6.</span> Strategy 3 &mdash; Parallel Power Simulation</h2>
+
+  <p>
+    The ultimate test: do MCPower and R produce the <strong>same power estimates</strong>
+    when each generates data and fits models <em>completely independently</em>?
+  </p>
+  <p>
+    Both systems use the same statistical model specification (ICC, effect sizes, sample size,
+    number of clusters) but use <strong>independent RNG streams</strong> and
+    <strong>independent DGP implementations</strong>.
+  </p>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-dot">1</div>
+      <div class="flow-content">
+        <strong>MCPower: generate &amp; fit 500 simulations</strong>
+        <p>
+          Calls <code>model.find_power(sample_size, n_sims=500)</code> internally.
+          Returns power as proportion of significant results.
+        </p>
+      </div>
+      <div class="flow-line"></div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-dot amber">2</div>
+      <div class="flow-content">
+        <strong>R: generate &amp; fit 500 simulations</strong>
+        <p>
+          <code>simulate_power_lme4.R</code> implements the same DGP model in R:
+          generates data, fits <code>lmer()</code>, counts rejections.
+          Uses a different seed (seed + 1,000,000) than MCPower.
+        </p>
+      </div>
+      <div class="flow-line"></div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-dot purple">3</div>
+      <div class="flow-content">
+        <strong>Compare power estimates</strong>
+        <p>
+          Compute |Power<sub>MCPower</sub> &minus; Power<sub>R</sub>|.
+          Pass if difference &le; 5 percentage points (accounting for Monte Carlo sampling noise).
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <details>
+    <summary>R power simulation code (simulate_power_lme4.R)</summary>
+    <div class="detail-body">
+<pre><span class="cm"># Compute variance components from ICC (same formula as MCPower)</span>
+sigma2_fixed <span class="op">&lt;-</span> <span class="fn">sum</span>(effect_values<span class="op">^</span><span class="num">2</span>)
+sigma2_within <span class="op">&lt;-</span> <span class="num">1.0</span> <span class="op">+</span> sigma2_fixed
+tau2 <span class="op">&lt;-</span> icc <span class="op">/</span> (<span class="num">1</span> <span class="op">-</span> icc) <span class="op">*</span> sigma2_within
+
+<span class="kw">for</span> (sim <span class="kw">in</span> <span class="num">1</span>:n_sims) {
+  <span class="cm"># Generate cluster assignments</span>
+  g <span class="op">&lt;-</span> <span class="fn">rep</span>(<span class="num">1</span>:n_clusters, each <span class="op">=</span> cluster_size)
+
+  <span class="cm"># Generate predictors ~ N(0, 1)</span>
+  x1 <span class="op">&lt;-</span> <span class="fn">rnorm</span>(n_obs)
+
+  <span class="cm"># Random intercepts ~ N(0, tau2)</span>
+  b <span class="op">&lt;-</span> <span class="fn">rnorm</span>(n_clusters, <span class="num">0</span>, <span class="fn">sqrt</span>(tau2))
+
+  <span class="cm"># Response: y = X*beta + b[group] + error</span>
+  y <span class="op">&lt;-</span> beta <span class="op">*</span> x1 <span class="op">+</span> b[g] <span class="op">+</span> <span class="fn">rnorm</span>(n_obs)
+
+  <span class="cm"># Fit & test via LRT</span>
+  fit  <span class="op">&lt;-</span> <span class="fn">lmer</span>(y <span class="op">~</span> x1 <span class="op">+</span> (<span class="num">1</span> <span class="op">|</span> g), REML <span class="op">=</span> <span class="kw">FALSE</span>)
+  null <span class="op">&lt;-</span> <span class="fn">lmer</span>(y <span class="op">~</span>  <span class="num">1</span> <span class="op">+</span> (<span class="num">1</span> <span class="op">|</span> g), REML <span class="op">=</span> <span class="kw">FALSE</span>)
+  lr_p <span class="op">&lt;-</span> <span class="fn">anova</span>(null, fit)$<span class="str">`Pr(>Chisq)`</span>[<span class="num">2</span>]
+
+  <span class="kw">if</span> (<span class="op">!</span><span class="fn">is.na</span>(lr_p) <span class="op">&amp;&amp;</span> lr_p <span class="op">&lt;</span> <span class="num">0.05</span>) n_significant <span class="op">+=</span> <span class="num">1</span>
+}
+power <span class="op">&lt;-</span> n_significant <span class="op">/</span> n_converged</pre>
+    </div>
+  </details>
+</section>
+
+<!-- ============================== 7. STRATEGY 4 ============================== -->
+<section id="strategy4">
+  <h2><span class="num">7.</span> Strategy 4 &mdash; Statistical Power Comparison (Z-test + FDR)</h2>
+
+  <p>
+    Strategy 3 compares MCPower and R power estimates using a <strong>fixed threshold</strong>
+    (|diff| &le; 5 percentage points). With 500 Monte Carlo simulations, sampling noise alone
+    can cause ~2&ndash;3pp deviations, leading to occasional false failures in sensitivity scenarios
+    near the threshold boundary. Strategy 4 replaces this fixed threshold with a
+    <strong>proper statistical test</strong>.
+  </p>
+
+  <div class="callout callout-info">
+    <strong>Independence:</strong> Strategy 4 operates independently of S1/S2/S3. It reuses
+    S3 power estimates when available, but <strong>runs its own parallel power simulations</strong>
+    for scenarios not covered by S3. This makes S4 the sole strategy for sensitivity
+    scenarios (~50 scenarios spanning 5%&ndash;90% power), where S1/S2/S3's fixed thresholds
+    are too rigid for borderline-power conditions.
+  </div>
+
+  <h3>Two-Proportion Z-test</h3>
+  <p>
+    For each scenario, we test H<sub>0</sub>: Power<sub>MCPower</sub> = Power<sub>R</sub>
+    using the standard two-proportion z-test:
+  </p>
+
+  <div class="formula">
+    z = (p&#770;<sub>MC</sub> &minus; p&#770;<sub>R</sub>) / SE<sub>diff</sub>
+  </div>
+
+  <p>where the pooled standard error under H<sub>0</sub> is:</p>
+
+  <div class="formula">
+    SE<sub>diff</sub> = &radic;( p&#770;<sub>pool</sub> (1 &minus; p&#770;<sub>pool</sub>) (1/n<sub>MC</sub> + 1/n<sub>R</sub>) )
+  </div>
+
+  <p>
+    and p&#770;<sub>pool</sub> = (p&#770;<sub>MC</sub> &middot; n<sub>MC</sub> + p&#770;<sub>R</sub> &middot; n<sub>R</sub>) / (n<sub>MC</sub> + n<sub>R</sub>)
+    is the pooled proportion. The two-sided p-value is computed via the complementary error function:
+    p = erfc(|z| / &radic;2).
+  </p>
+
+  <p>
+    <strong>Edge case:</strong> When both tools agree on extreme power (0% or 100%),
+    the pooled SE is zero. In this case z = 0, p = 1.0, and the scenario trivially passes.
+  </p>
+
+  <h3>Benjamini-Hochberg FDR Correction</h3>
+  <p>
+    With ~50 scenarios tested simultaneously, multiple testing inflation would produce
+    false positives. The BH procedure controls the <strong>False Discovery Rate</strong>
+    at level &alpha; = 0.05:
+  </p>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-dot">1</div>
+      <div class="flow-content">
+        <strong>Rank p-values</strong>
+        <p>Sort all m p-values in ascending order: p<sub>(1)</sub> &le; p<sub>(2)</sub> &le; &hellip; &le; p<sub>(m)</sub></p>
+      </div>
+      <div class="flow-line"></div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-dot">2</div>
+      <div class="flow-content">
+        <strong>Compute adjusted p-values</strong>
+        <p>For each rank k: p<sub>adj</sub>(k) = min( p<sub>(k)</sub> &middot; m / k, &ensp; 1.0 )</p>
+      </div>
+      <div class="flow-line"></div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-dot">3</div>
+      <div class="flow-content">
+        <strong>Enforce monotonicity</strong>
+        <p>Working from the largest rank downward, ensure p<sub>adj</sub>(k) &le; p<sub>adj</sub>(k+1)</p>
+      </div>
+      <div class="flow-line"></div>
+    </div>
+
+    <div class="flow-step">
+      <div class="flow-dot green">4</div>
+      <div class="flow-content">
+        <strong>Decision</strong>
+        <p>PASS if adjusted p-value &gt; 0.05 (cannot reject H<sub>0</sub>: powers are equal)</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Interpretation</h3>
+  <div class="card">
+    <table>
+      <tr><th>Result</th><th>Meaning</th></tr>
+      <tr>
+        <td><strong>PASS</strong> (adj. p &gt; 0.05)</td>
+        <td>Cannot reject that MCPower and R produce equal power. The observed difference
+            is consistent with Monte Carlo sampling noise.</td>
+      </tr>
+      <tr>
+        <td><strong>FAIL</strong> (adj. p &le; 0.05)</td>
+        <td>The power difference is statistically significant even after FDR correction,
+            suggesting a systematic discrepancy between the two implementations.</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="callout callout-warn">
+    <strong>Relationship to Strategy 3:</strong> For core scenarios that run both S3 and S4,
+    the two are complementary: S3 flags large absolute differences (&gt; 5pp) regardless of
+    significance, while S4 tests whether <em>any</em> difference is statistically significant.
+    For sensitivity scenarios, <strong>only S4 runs</strong> &mdash; the fixed 5pp threshold
+    of S3 produces too many false failures at borderline power levels.
+  </div>
+</section>
+
+<!-- ============================== 8. SCENARIOS ============================== -->
+<section id="scenarios">
+  <h2><span class="num">8.</span> Scenario Matrix</h2>
+
+  <p>
+    The validation uses two scenario categories: <strong>~27 core scenarios</strong> (tested with
+    all four strategies S1&ndash;S4) and <strong>~50 sensitivity scenarios</strong> (tested with
+    S4 only). Core scenarios verify solver correctness with well-powered designs. Sensitivity
+    scenarios span the full 5%&ndash;90% power range to validate power curve accuracy.
+  </p>
+
+  <h3>Random Intercept Scenarios (~20)</h3>
+  <div class="card">
+    <table>
+      <tr><th>Parameter</th><th>Values</th></tr>
+      <tr><td>Formula</td><td><code>y ~ x1 + (1|g)</code> &nbsp; and &nbsp; <code>y ~ x1 + x2 + (1|g)</code></td></tr>
+      <tr><td>ICC</td><td>0.1, 0.2, 0.5</td></tr>
+      <tr><td>Clusters</td><td>10, 20, 50</td></tr>
+      <tr><td>Total N</td><td>500, 1000</td></tr>
+      <tr><td>Effect sizes</td><td>Small (&beta; = 0.3), Medium (&beta; = 0.5), Mixed two-predictor</td></tr>
+    </table>
+    <p style="margin-top:10px; font-size:0.88em; color:var(--text-muted);">
+      Example name: <code>intercept_icc0.2_cl20_n1000_medium</code>
+    </p>
+  </div>
+
+  <h3>Random Slopes Scenarios (~4)</h3>
+  <div class="card">
+    <table>
+      <tr><th>Parameter</th><th>Values</th></tr>
+      <tr><td>Formula</td><td><code>y ~ x1 + (1 + x1|g)</code></td></tr>
+      <tr><td>ICC</td><td>0.2</td></tr>
+      <tr><td>Clusters &times; N</td><td>20&times;1000, 30&times;1500, 20&times;2000, 50&times;2000</td></tr>
+      <tr><td>Slope variance</td><td>0.1</td></tr>
+      <tr><td>Slope-intercept correlation</td><td>0.3</td></tr>
+      <tr><td>Effect size</td><td>&beta; = 0.5</td></tr>
+    </table>
+  </div>
+
+  <h3>Nested Random Effects Scenarios (~3)</h3>
+  <div class="card">
+    <table>
+      <tr><th>Parameter</th><th>Values</th></tr>
+      <tr><td>Formula</td><td><code>y ~ x1 + (1|school/classroom)</code></td></tr>
+      <tr><td>ICC<sub>school</sub></td><td>0.15</td></tr>
+      <tr><td>ICC<sub>classroom</sub></td><td>0.10</td></tr>
+      <tr><td>Schools &times; classrooms/school</td><td>10&times;3, 15&times;4, 20&times;3</td></tr>
+      <tr><td>Total N</td><td>1500, 2400, 1800</td></tr>
+      <tr><td>Effect size</td><td>&beta; = 0.5</td></tr>
+    </table>
+  </div>
+
+  <h3>Sensitivity Scenarios (~50, S4 only)</h3>
+  <div class="card">
+    <p>
+      Sensitivity scenarios systematically sweep effect sizes, sample sizes, cluster counts,
+      and ICCs to cover the full power spectrum. They use <strong>only Strategy 4</strong>
+      (statistical z-test + FDR) because S1/S2/S3's fixed thresholds produce false failures
+      at borderline power levels.
+    </p>
+    <table>
+      <tr><th>Category</th><th>Count</th><th>Power Range</th><th>Key Variations</th></tr>
+      <tr>
+        <td>Intercept sweep</td>
+        <td>24</td>
+        <td>~5%&ndash;90%</td>
+        <td>N: 50&ndash;500, K: 5&ndash;20, &beta;: 0.05&ndash;0.30, ICC: 0.2&ndash;0.4</td>
+      </tr>
+      <tr>
+        <td>Two-predictor</td>
+        <td>8</td>
+        <td>~10%&ndash;75%</td>
+        <td>N: 100&ndash;400, K: 10&ndash;15, two effect sizes varied</td>
+      </tr>
+      <tr>
+        <td>Random slopes</td>
+        <td>10</td>
+        <td>~5%&ndash;80%</td>
+        <td>N: 150&ndash;500, K: 10&ndash;20, &beta;: 0.10&ndash;0.25</td>
+      </tr>
+      <tr>
+        <td>Nested effects</td>
+        <td>8</td>
+        <td>~5%&ndash;70%</td>
+        <td>N: 100&ndash;600, K: 5&ndash;10, npp: 2&ndash;5</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="callout callout-info">
+    <strong>Design rationale:</strong> The core scenario matrix covers conditions
+    researchers commonly encounter &mdash; from small cluster counts (k=10, where the
+    design effect is most impactful) to large ones (k=50), from low ICC (0.1, typical in
+    multisite trials) to high ICC (0.5, common in educational data), and from small
+    to medium effect sizes. The sensitivity scenarios extend validation to the full
+    power spectrum, ensuring MCPower's power estimates are accurate even at borderline
+    power levels where sampling noise is highest.
+  </div>
+</section>
+
+<!-- ============================== 9. THRESHOLDS ============================== -->
+<section id="thresholds">
+  <h2><span class="num">9.</span> Pass/Fail Thresholds</h2>
+
+  <p>
+    Each scenario gets a <strong>PASS</strong> or <strong>FAIL</strong> verdict
+    based on the following thresholds:
+  </p>
+
+  <div class="card">
+    <table class="threshold-table">
+      <tr><th>Metric</th><th>Threshold</th><th>Strategies</th><th>Rationale</th></tr>
+      <tr>
+        <td>Significance agreement</td>
+        <td>&ge; 95%</td>
+        <td>S1, S2</td>
+        <td>Allows up to 5% disagreement due to borderline cases near &alpha; = 0.05</td>
+      </tr>
+      <tr>
+        <td>&beta; estimate correlation</td>
+        <td>r &ge; 0.98</td>
+        <td>S1</td>
+        <td>Fixed-effect estimates should be nearly identical</td>
+      </tr>
+      <tr>
+        <td>SE estimate correlation</td>
+        <td>r &ge; 0.95</td>
+        <td>S1</td>
+        <td>Relaxed slightly &mdash; SEs are more sensitive to optimizer differences</td>
+      </tr>
+      <tr>
+        <td>&tau;&sup2; estimate correlation</td>
+        <td>r &ge; 0.95</td>
+        <td>S1</td>
+        <td>Random-effect variance estimates should correlate highly</td>
+      </tr>
+      <tr>
+        <td>Power difference</td>
+        <td>&le; 5 pp</td>
+        <td>S3</td>
+        <td>Accounts for Monte Carlo sampling variability (~2&ndash;3 pp at 500 sims)</td>
+      </tr>
+      <tr>
+        <td>Adjusted p-value (BH FDR)</td>
+        <td>&gt; 0.05</td>
+        <td>S4</td>
+        <td>Two-proportion z-test with FDR correction &mdash; cannot reject equal power</td>
+      </tr>
+      <tr>
+        <td>Type I error rate</td>
+        <td>3%&ndash;7%</td>
+        <td>S1</td>
+        <td>Null datasets should reject at approximately &alpha; = 5%</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============================== 10. R DETAILS ============================== -->
+<section id="r-details">
+  <h2><span class="num">10.</span> R Implementation Details</h2>
+
+  <p>For R users who want to understand exactly what lme4 configuration is being compared against.</p>
+
+  <h3>R Packages</h3>
+  <div class="card">
+    <table>
+      <tr><th>Package</th><th>Purpose</th></tr>
+      <tr>
+        <td><code>lme4</code></td>
+        <td>Core mixed-effects model fitting via <code>lmer()</code></td>
+      </tr>
+      <tr>
+        <td><code>lmerTest</code></td>
+        <td>Extends <code>lmer</code> summary to include Satterthwaite p-values for fixed effects</td>
+      </tr>
+      <tr>
+        <td><code>jsonlite</code></td>
+        <td>JSON serialization for R&harr;Python data exchange</td>
+      </tr>
+    </table>
+  </div>
+
+  <h3>Model Fitting Configuration</h3>
+  <ul>
+    <li><strong>Estimation:</strong> REML for parameter extraction, ML refit for Likelihood Ratio Tests</li>
+    <li><strong>Optimizer:</strong> <code>bobyqa</code> (bound optimization by quadratic approximation)</li>
+    <li><strong>Max iterations:</strong> 50,000 function evaluations via <code>optCtrl = list(maxfun = 50000)</code></li>
+    <li><strong>Convergence failures:</strong> caught with <code>tryCatch()</code>, marked as unconverged, excluded from comparisons</li>
+  </ul>
+
+  <h3>Statistical Tests</h3>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon card-icon-amber">LR</div>
+      <div>
+        <div class="card-title">Overall Significance: Likelihood Ratio Test</div>
+        <div class="card-subtitle">Tests whether any fixed effect is significantly different from zero</div>
+      </div>
+    </div>
+<pre><span class="cm"># Null model: intercept + random effects only</span>
+null_fit <span class="op">&lt;-</span> <span class="fn">lmer</span>(y <span class="op">~</span> <span class="num">1</span> <span class="op">+</span> (<span class="num">1</span> <span class="op">|</span> g), data <span class="op">=</span> d, REML <span class="op">=</span> <span class="kw">FALSE</span>)
+full_ml  <span class="op">&lt;-</span> <span class="fn">update</span>(fit, REML <span class="op">=</span> <span class="kw">FALSE</span>)
+lr_test  <span class="op">&lt;-</span> <span class="fn">anova</span>(null_fit, full_ml)
+<span class="cm"># Chi-squared test with df = number of fixed effects</span></pre>
+    <p style="margin-top:10px; font-size:0.9em;">
+      The null model retains the random-effects structure but drops all fixed-effect predictors.
+      Both models are refit with ML (not REML) because REML likelihoods are not comparable
+      across models with different fixed effects.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon card-icon-blue">W</div>
+      <div>
+        <div class="card-title">Individual Effects: Wald z-tests</div>
+        <div class="card-subtitle">Tests each fixed-effect coefficient individually</div>
+      </div>
+    </div>
+    <p>
+      Via <code>lmerTest::summary()</code> which adds Satterthwaite-approximated
+      degrees of freedom and p-values to the standard <code>lmer</code> coefficient table.
+      The Wald statistic is <em>t</em> = &beta;&#770; / SE(&beta;&#770;) with Satterthwaite df.
+    </p>
+  </div>
+
+  <h3>R&harr;Python Communication</h3>
+  <p>
+    R scripts are invoked via <code>subprocess.run(["Rscript", "--vanilla", script_path, ...])</code>
+    with a 600-second timeout. Data passes as CSV files; results return as JSON on stdout.
+    Stderr is reserved for R warnings/messages and discarded unless an error occurs.
+  </p>
+  <p>
+    A <strong>smart caching layer</strong> hashes the scenario parameters + R script contents
+    (SHA-256) so unchanged scenarios skip re-running R, which is critical since a full
+    validation run with all strategies can take 30+ minutes.
+  </p>
+</section>
+
+<!-- ============================== 11. RUNNING ============================== -->
+<section id="running">
+  <h2><span class="num">11.</span> Running the Validation</h2>
+
+  <h3>Prerequisites</h3>
+  <ul>
+    <li>Python 3.10+ with MCPower installed (<code>pip install -e MCPower/</code>)</li>
+    <li>R with packages: <code>lme4</code>, <code>lmerTest</code>, <code>jsonlite</code></li>
+    <li><code>Rscript</code> available on <code>$PATH</code></li>
+  </ul>
+
+  <h3>Commands</h3>
+<pre><span class="cm"># Run all strategies on all scenarios (full validation)</span>
+python LME4-validation/run_validation.py
+
+<span class="cm"># Run only Strategy 1 (solver comparison)</span>
+python LME4-validation/run_validation.py --strategy 1
+
+<span class="cm"># Run specific scenarios by name prefix</span>
+python LME4-validation/run_validation.py --scenarios intercept_icc0.2
+
+<span class="cm"># Run with more datasets (default: 100) or simulations (default: 500)</span>
+python LME4-validation/run_validation.py --n-datasets 200 --n-sims 1000
+
+<span class="cm"># Clear cached R results and re-run from scratch</span>
+python LME4-validation/run_validation.py --clear-cache
+
+<span class="cm"># Disable caching entirely</span>
+python LME4-validation/run_validation.py --no-cache
+
+<span class="cm"># Set custom random seed (default: 42)</span>
+python LME4-validation/run_validation.py --seed 123</pre>
+
+  <h3>Example output</h3>
+<pre>Running validation: 27 scenarios, strategies [1, 2, 3, 4]
+  n_datasets=100, n_sims_s3=500, seed=42
+
+============================================================
+Strategy 1: External Data Agreement
+============================================================
+  [S1] intercept_icc0.2_cl20_n1000_small ... PASS (agree=100.0%, 12.4s)
+  [S1] intercept_icc0.2_cl20_n1000_medium ... PASS (agree=100.0%, 11.8s)
+  ...
+
+============================================================
+Strategy 3: Parallel Power Simulation
+============================================================
+  [S3] intercept_icc0.2_cl20_n1000_medium ... PASS (MC=0.847, R=0.832, 45.2s)
+  ...
+
+============================================================
+Strategy 4: Statistical Power Comparison (Z-test + FDR)
+============================================================
+  [S4] intercept_icc0.2_cl20_n1000_medium: PASS (z=0.672, adj_p=0.8921)
+  ...
+
+============================================================
+DONE: 27/27 scenarios passed (892.3s total)
+Report: LME4-validation/reports/validation_report_20260222_143201.html
+============================================================</pre>
+</section>
+
+<!-- ============================== 12. REPORTS ============================== -->
+<section id="reports">
+  <h2><span class="num">12.</span> Reading the Reports</h2>
+
+  <p>
+    After each run, a <strong>self-contained HTML report</strong> is generated in
+    <code>LME4-validation/reports/</code>.
+    The report includes:
+  </p>
+
+  <div class="card">
+    <ul style="margin-left: 0; list-style: none;">
+      <li style="margin-bottom: 12px;">
+        <strong>Summary banner</strong> &mdash;
+        overall PASS/FAIL status with scenario counts per strategy
+      </li>
+      <li style="margin-bottom: 12px;">
+        <strong>Strategy 1 table</strong> &mdash;
+        agreement rate, Cohen's &kappa;, number of datasets compared, color-coded result per scenario
+      </li>
+      <li style="margin-bottom: 12px;">
+        <strong>Strategy 2 table</strong> &mdash;
+        agreement rate and sample count per scenario
+      </li>
+      <li style="margin-bottom: 12px;">
+        <strong>Strategy 3 table</strong> &mdash;
+        MCPower power, R power, absolute difference per scenario
+      </li>
+      <li style="margin-bottom: 12px;">
+        <strong>Strategy 4 table + scatter plot</strong> &mdash;
+        z-scores, raw p-values, BH-adjusted p-values, and pass/fail for each scenario;
+        summary line showing number of rejections; inline SVG scatter plot of MCPower vs R
+        power (points on the diagonal = perfect agreement)
+      </li>
+    </ul>
+  </div>
+
+  <p>
+    Reports are fully self-contained (inline CSS, no external dependencies) and can be shared
+    directly. Each cell is color-coded green (pass) or red (fail) for quick scanning.
+  </p>
+
+  <div class="callout callout-success">
+    <strong>Reproducibility:</strong> Reports include the timestamp. Re-running with the same
+    <code>--seed</code> produces identical results (assuming R and MCPower versions haven't changed).
+    The caching system's SHA-256 keys incorporate the R script source, so updating an R script
+    automatically invalidates the relevant cache entries.
+  </div>
+</section>
+
+<!-- ============================== FOOTER ============================== -->
+<div class="footer">
+  <p>
+    MCPower LME Validation Framework &mdash; Documentation generated February 2026
+  </p>
+  <p style="margin-top: 6px;">
+    Reference: Bates, D., M&auml;chler, M., Bolker, B., &amp; Walker, S. (2015).
+    Fitting Linear Mixed-Effects Models Using lme4.
+    <em>Journal of Statistical Software</em>, 67(1), 1&ndash;48.
+  </p>
+</div>
+
+</div>
+</body>
+</html>
