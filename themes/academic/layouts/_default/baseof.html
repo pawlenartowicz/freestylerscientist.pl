@@ -54,6 +54,20 @@
       document.querySelector('.site-nav').classList.toggle('open');
       this.textContent = this.textContent === 'Menu' ? 'Close' : 'Menu';
     });
+
+    // Auto-generate IDs for headings without them (HTML content doesn't get Hugo's auto-IDs)
+    document.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(function(heading) {
+      if (!heading.id) {
+        heading.id = heading.textContent.trim().toLowerCase()
+          .replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+      }
+    });
+
+    // Scroll to hash target after IDs are generated (browser tried before JS ran)
+    if (window.location.hash) {
+      var target = document.querySelector(window.location.hash);
+      if (target) target.scrollIntoView();
+    }
   </script>
 </body>
 </html>
