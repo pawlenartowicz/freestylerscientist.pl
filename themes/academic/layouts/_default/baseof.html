@@ -83,11 +83,12 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+  <a href="#main-content" class="skip-link">Skip to content</a>
   <header class="site-header">
     <div class="header-inner">
       <a href="/" class="site-title">{{ .Site.Title }}</a>
-      <button class="menu-toggle" aria-label="Toggle menu">Menu</button>
-      <nav class="site-nav">
+      <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="site-nav">Menu</button>
+      <nav class="site-nav" id="site-nav">
         {{ range .Site.Menus.main }}
           <a href="{{ .URL }}"{{ if $.IsMenuCurrent "main" . }} class="active"{{ end }}>{{ .Name }}</a>
         {{ end }}
@@ -95,7 +96,7 @@
     </div>
   </header>
 
-  <main class="site-main">
+  <main class="site-main" id="main-content">
     {{ block "main" . }}{{ end }}
   </main>
 
@@ -107,8 +108,24 @@
 
   <script>
     document.querySelector('.menu-toggle').addEventListener('click', function() {
-      document.querySelector('.site-nav').classList.toggle('open');
-      this.textContent = this.textContent === 'Menu' ? 'Close' : 'Menu';
+      var nav = document.querySelector('.site-nav');
+      nav.classList.toggle('open');
+      var isOpen = nav.classList.contains('open');
+      this.textContent = isOpen ? 'Close' : 'Menu';
+      this.setAttribute('aria-expanded', isOpen);
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        var nav = document.querySelector('.site-nav');
+        var toggle = document.querySelector('.menu-toggle');
+        if (nav.classList.contains('open')) {
+          nav.classList.remove('open');
+          toggle.textContent = 'Menu';
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.focus();
+        }
+      }
     });
 
     // Auto-generate IDs for headings without them (HTML content doesn't get Hugo's auto-IDs)

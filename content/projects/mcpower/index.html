@@ -12,32 +12,32 @@ schema: "SoftwareApplication"
 
 <hr>
 
-<p style="text-align:center; font-size:1.15rem;"><em>Simple Monte Carlo power analysis for complex models. Find the sample size you need or check if your study has enough power &mdash; even with complex models that traditional power analysis can&rsquo;t handle.</em></p>
+<p class="subtitle"><em>Simple Monte Carlo power analysis for complex models. Find the sample size you need or check if your study has enough power &mdash; even with complex models that traditional power analysis can&rsquo;t handle.</em></p>
 
-<div style="margin: 20px 0; text-align: left;">
-  <a href="https://github.com/pawlenartowicz/MCPower/actions"><img src="https://github.com/pawlenartowicz/MCPower/workflows/Tests/badge.svg" alt="Tests" style="display:inline; margin: 2px 4px; vertical-align: middle;"></a>
-  <a href="https://pypi.org/project/MCPower/"><img src="https://img.shields.io/pypi/v/MCPower" alt="PyPI" style="display:inline; margin: 2px 4px; vertical-align: middle;"></a>
-  <a href="https://pypi.org/project/MCPower/"><img src="https://img.shields.io/pypi/pyversions/mcpower" alt="Python" style="display:inline; margin: 2px 4px; vertical-align: middle;"></a>
-  <a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPLv3-green.svg" alt="License: GPL v3" style="display:inline; margin: 2px 4px; vertical-align: middle;"></a>
-  <a href="https://doi.org/10.5281/zenodo.16502734"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.16502734.svg" alt="DOI" style="display:inline; margin: 2px 4px; vertical-align: middle;"></a>
-  <img src="https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white" alt="Windows" style="display:inline; margin: 2px 4px; vertical-align: middle;">
-  <img src="https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=white" alt="macOS" style="display:inline; margin: 2px 4px; vertical-align: middle;">
-  <img src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" alt="Linux" style="display:inline; margin: 2px 4px; vertical-align: middle;">
+<div class="badge-row">
+  <a href="https://github.com/pawlenartowicz/MCPower/actions"><img src="https://github.com/pawlenartowicz/MCPower/workflows/Tests/badge.svg" alt="Tests"></a>
+  <a href="https://pypi.org/project/MCPower/"><img src="https://img.shields.io/pypi/v/MCPower" alt="PyPI"></a>
+  <a href="https://pypi.org/project/MCPower/"><img src="https://img.shields.io/pypi/pyversions/mcpower" alt="Python"></a>
+  <a href="https://www.gnu.org/licenses/gpl-3.0"><img src="https://img.shields.io/badge/License-GPLv3-green.svg" alt="License: GPL v3"></a>
+  <a href="https://doi.org/10.5281/zenodo.16502734"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.16502734.svg" alt="DOI"></a>
+  <img src="https://img.shields.io/badge/Windows-0078D6?logo=windows&logoColor=white" alt="Windows">
+  <img src="https://img.shields.io/badge/macOS-000000?logo=apple&logoColor=white" alt="macOS">
+  <img src="https://img.shields.io/badge/Linux-FCC624?logo=linux&logoColor=black" alt="Linux">
 </div>
 
 <figure>
-  <img src="mcpower_asci.png" alt="MCPower ASCII art" style="width:650px; height:auto;">
+  <img src="mcpower_asci.png" alt="MCPower ASCII art" class="hero-ascii">
 </figure>
 
 <h2>What Is Power Analysis?</h2>
 
-<p style="text-align: justify;">Statistical power is the probability that a study will detect a real effect when one exists. A power analysis helps you determine what sample size you need to achieve a target power level (e.g., 80%), or what power you have at a given sample size. Without it, you risk running underpowered studies that waste resources and fail to find real effects.</p>
+<p class="text-justify">Statistical power is the probability that a study will detect a real effect when one exists. A power analysis helps you determine what sample size you need to achieve a target power level (e.g., 80%), or what power you have at a given sample size. Without it, you risk running underpowered studies that waste resources and fail to find real effects.</p>
 
 <hr>
 
 <h2>Why MCPower?</h2>
 
-<p style="text-align: justify;"><strong>Traditional power analysis breaks down</strong> with interactions, correlated predictors, categorical variables, or non-normal data. MCPower uses simulation instead of formulas &mdash; it generates thousands of datasets exactly like yours, then sees how often your analysis finds real effects.</p>
+<p class="text-justify"><strong>Traditional power analysis breaks down</strong> with interactions, correlated predictors, categorical variables, or non-normal data. MCPower uses simulation instead of formulas &mdash; it generates thousands of datasets exactly like yours, then sees how often your analysis finds real effects.</p>
 
 <ul>
   <li><strong>Works with complexity</strong>: Interactions, correlations, factors, any distribution</li>
@@ -54,11 +54,11 @@ schema: "SoftwareApplication"
 
 <h2>Desktop Application (GUI)</h2>
 
-<p style="text-align: justify;">Prefer a graphical interface? <strong><a href="https://github.com/pawlenartowicz/mcpower-gui">MCPower GUI</a></strong> is a standalone desktop app &mdash; no Python installation required. Download ready-to-run executables for Windows, Linux, and macOS.</p>
+<p class="text-justify">Prefer a graphical interface? <strong><a href="https://github.com/pawlenartowicz/mcpower-gui">MCPower GUI</a></strong> is a standalone desktop app &mdash; no Python installation required. Download ready-to-run executables for Windows, Linux, and macOS.</p>
 
-<table style="border-spacing: 12px 0; border-collapse: separate;">
+<table class="download-table">
   <thead>
-    <tr><th>Platform</th><th>Download</th></tr>
+    <tr><th scope="col">Platform</th><th scope="col">Download</th></tr>
   </thead>
   <tbody>
     <tr><td><strong>Windows</strong></td><td><a href="https://github.com/pawlenartowicz/mcpower-gui/releases/latest/download/MCPower.exe">MCPower.exe</a></td></tr>
@@ -68,50 +68,50 @@ schema: "SoftwareApplication"
   </tbody>
 </table>
 
-<p style="text-align: justify;">The GUI walks you through three steps: <strong>Model</strong> (define your study design), <strong>Analysis</strong> (choose mode and settings), and <strong>Results</strong> (view power tables, charts, and a replication script).</p>
+<p class="text-justify">The GUI walks you through three steps: <strong>Model</strong> (define your study design), <strong>Analysis</strong> (choose mode and settings), and <strong>Results</strong> (view power tables, charts, and a replication script).</p>
 
 <h3>Step 1: Define Your Model</h3>
-<p style="text-align: justify;">Enter an R-style formula, set variable types and effect sizes. Use Small/Medium/Large buttons for Cohen&rsquo;s conventions, or type custom values.</p>
+<p class="text-justify">Enter an R-style formula, set variable types and effect sizes. Use Small/Medium/Large buttons for Cohen&rsquo;s conventions, or type custom values.</p>
 <figure>
-  <img src="MCPower-GUI-2.png" alt="MCPower GUI — Model tab with formula, variable types, and effect sizes" style="border: 1px solid rgba(91, 68, 96, 0.15); border-radius: 6px;">
+  <img src="MCPower-GUI-2.png" alt="MCPower GUI — Model tab with formula, variable types, and effect sizes" class="img-screenshot">
   <figcaption>Model tab &mdash; formula with interaction, variable types, and effect size sliders</figcaption>
 </figure>
 
 <h3>Step 2: Configure &amp; Run Analysis</h3>
-<p style="text-align: justify;">Choose between Find Power (at a fixed sample size) or Find Sample Size (search a range). Enable scenario analysis for robustness testing.</p>
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5em 0;">
-  <figure style="margin: 0;">
-    <img src="MCPower-GUI-3.png" alt="MCPower GUI — Analysis tab with power and sample size settings" style="border: 1px solid rgba(91, 68, 96, 0.15); border-radius: 6px;">
+<p class="text-justify">Choose between Find Power (at a fixed sample size) or Find Sample Size (search a range). Enable scenario analysis for robustness testing.</p>
+<div class="figure-grid">
+  <figure>
+    <img src="MCPower-GUI-3.png" alt="MCPower GUI — Analysis tab with power and sample size settings" class="img-screenshot">
     <figcaption>Analysis tab &mdash; settings for target power, scenarios, and sample size range</figcaption>
   </figure>
-  <figure style="margin: 0;">
-    <img src="MCPower-GUI-4.png" alt="MCPower GUI — Simulation running with progress bar" style="border: 1px solid rgba(91, 68, 96, 0.15); border-radius: 6px;">
+  <figure>
+    <img src="MCPower-GUI-4.png" alt="MCPower GUI — Simulation running with progress bar" class="img-screenshot">
     <figcaption>Simulation in progress &mdash; real-time progress with option to abandon</figcaption>
   </figure>
 </div>
 
 <h3>Step 3: View Results</h3>
-<p style="text-align: justify;">Interactive power curves, bar charts with scenario tabs (Optimistic / Realistic / Doomer), data tables, and a ready-to-use Python replication script.</p>
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5em 0;">
-  <figure style="margin: 0;">
-    <img src="MCPower-GUI-5.png" alt="MCPower GUI — Find Sample Size results with power curves" style="border: 1px solid rgba(91, 68, 96, 0.15); border-radius: 6px;">
+<p class="text-justify">Interactive power curves, bar charts with scenario tabs (Optimistic / Realistic / Doomer), data tables, and a ready-to-use Python replication script.</p>
+<div class="figure-grid">
+  <figure>
+    <img src="MCPower-GUI-5.png" alt="MCPower GUI — Find Sample Size results with power curves" class="img-screenshot">
     <figcaption>Find Sample Size &mdash; power curves across sample sizes with scenario analysis</figcaption>
   </figure>
-  <figure style="margin: 0;">
-    <img src="MCPower-GUI-6.png" alt="MCPower GUI — Find Power results with bar chart, table, and replication script" style="border: 1px solid rgba(91, 68, 96, 0.15); border-radius: 6px;">
+  <figure>
+    <img src="MCPower-GUI-6.png" alt="MCPower GUI — Find Power results with bar chart, table, and replication script" class="img-screenshot">
     <figcaption>Find Power &mdash; bar chart, data table, and replication script</figcaption>
   </figure>
 </div>
 
 <h3>Dark Theme &amp; ANOVA Mode</h3>
-<p style="text-align: justify;">MCPower GUI includes a dark theme and a dedicated ANOVA mode for factorial designs with automatic factor handling.</p>
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5em 0;">
-  <figure style="margin: 0;">
-    <img src="MCPower-GUI-d1.png" alt="MCPower GUI — ANOVA mode in dark theme" style="border: 1px solid rgba(91, 68, 96, 0.15); border-radius: 6px;">
+<p class="text-justify">MCPower GUI includes a dark theme and a dedicated ANOVA mode for factorial designs with automatic factor handling.</p>
+<div class="figure-grid">
+  <figure>
+    <img src="MCPower-GUI-d1.png" alt="MCPower GUI — ANOVA mode in dark theme" class="img-screenshot">
     <figcaption>ANOVA mode (dark theme) &mdash; factorial design with named factors and levels</figcaption>
   </figure>
-  <figure style="margin: 0;">
-    <img src="MCPower-GUI-d2.png" alt="MCPower GUI — Results in dark theme" style="border: 1px solid rgba(91, 68, 96, 0.15); border-radius: 6px;">
+  <figure>
+    <img src="MCPower-GUI-d2.png" alt="MCPower GUI — Results in dark theme" class="img-screenshot">
     <figcaption>Results (dark theme) &mdash; power curves with scenario analysis</figcaption>
   </figure>
 </div>
@@ -148,7 +148,7 @@ model.find_sample_size(target_test="treatment", from_size=50, to_size=200)</code
 
 <h2>Python Package: Scenario Analysis</h2>
 
-<p style="text-align: justify;"><strong>Real studies rarely match perfect assumptions.</strong> MCPower&rsquo;s scenario analysis tests how robust your power calculations are under realistic conditions.</p>
+<p class="text-justify"><strong>Real studies rarely match perfect assumptions.</strong> MCPower&rsquo;s scenario analysis tests how robust your power calculations are under realistic conditions.</p>
 
 <pre><code># python
 
@@ -212,7 +212,7 @@ treatment                                75           85           100
 
 <h2>Citation</h2>
 
-<p style="text-align: justify;">GPL v3. If you use MCPower in research, please cite:</p>
+<p class="text-justify">GPL v3. If you use MCPower in research, please cite:</p>
 
 <p>Lenartowicz, P. (2025). MCPower: Monte Carlo Power Analysis for Statistical Models. Zenodo. DOI: <a href="https://doi.org/10.5281/zenodo.16502734">10.5281/zenodo.16502734</a></p>
 
