@@ -213,6 +213,13 @@ figcaption {
   margin-bottom: 0.75em;
 }
 
+.sidebar-support-text {
+  text-align: center;
+  font-size: 0.9rem;
+  margin: 1em 0 0.75em;
+  line-height: 1.5;
+}
+
 /* === Social Links === */
 .social-links {
   display: flex;

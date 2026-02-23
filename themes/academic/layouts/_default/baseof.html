@@ -5,15 +5,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ if not .IsHome }}{{ .Title }} — {{ end }}{{ .Site.Title }}</title>
   <meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Title }} — Freestyler Scientist{{ end }}">
+  <meta name="author" content="Paweł Lenartowicz">
+  <link rel="canonical" href="{{ .Permalink }}">
 
   {{/* Open Graph */}}
   <meta property="og:title" content="{{ .Title }}">
   <meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ .Site.Title }} — Freestyler Scientist{{ end }}">
-  <meta property="og:image" content="{{ .Site.BaseURL }}images/Workshops-1024x1024.jpg">
+  {{ $ogImage := printf "%simages/Workshops-1024x1024.jpg" .Site.BaseURL }}
+  {{ with .Params.image }}{{ with $.Resources.GetMatch . }}{{ $ogImage = .Permalink }}{{ end }}{{ end }}
+  <meta property="og:image" content="{{ $ogImage }}">
   <meta property="og:site_name" content="{{ .Site.Title }}">
   <meta property="og:url" content="{{ .Permalink }}">
-  <meta property="og:type" content="website">
+  <meta property="og:type" content="{{ cond (or .IsHome .IsSection) "website" "article" }}">
+  {{ if not (or .IsHome .IsSection) -}}
+  <meta property="article:author" content="Paweł Lenartowicz">
+  {{ with .Date }}{{ if not .IsZero }}<meta property="article:published_time" content="{{ .Format "2006-01-02" }}">{{ end }}{{ end }}
+  {{- end }}
   <meta name="twitter:card" content="summary_large_image">
+
+  {{/* JSON-LD Structured Data */}}
+  {{ if .IsHome }}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Paweł Lenartowicz",
+    "url": "{{ .Site.BaseURL }}",
+    "jobTitle": "Independent Scientist",
+    "affiliation": [
+      {"@type": "Organization", "name": "Society for Open Science", "url": "https://stowarzyszenieotwartejnauki.pl"},
+      {"@type": "Organization", "name": "Center for Brain Research, Jagiellonian University", "url": "https://cbr.uj.edu.pl"}
+    ],
+    "sameAs": [
+      "https://bsky.app/profile/freestylerscientist.pl",
+      "https://github.com/pawlenartowicz",
+      "https://orcid.org/0000-0002-6906-7217"
+    ]
+  }
+  </script>
+  {{ else if eq .Params.schema "SoftwareApplication" }}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "{{ .Title }}",
+    "description": "{{ .Description }}",
+    "author": {"@type": "Person", "name": "Paweł Lenartowicz"},
+    "url": "{{ .Permalink }}",
+    "applicationCategory": "Science",
+    "operatingSystem": "Windows, macOS, Linux",
+    "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+  }
+  </script>
+  {{ else if eq .Params.schema "ScholarlyArticle" }}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "name": "{{ .Title }}",
+    "description": "{{ .Description }}",
+    "author": {"@type": "Person", "name": "Paweł Lenartowicz"},
+    "url": "{{ .Permalink }}"
+    {{ with .Date }}{{ if not .IsZero }},"datePublished": "{{ .Format "2006-01-02" }}"{{ end }}{{ end }}
+  }
+  </script>
+  {{ end }}
 
   {{/* Favicon */}}
   <link rel="icon" href="/images/cropped-fav3.png" sizes="32x32">

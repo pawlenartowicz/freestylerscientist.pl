@@ -5,6 +5,9 @@ layout: "single"
 type: "projects"
 sidebar: true
 description: "MCPower: Monte Carlo power analysis for Python. Find sample sizes and check statistical power for complex models."
+image: "mcpower_asci.png"
+date: 2025-01-01
+schema: "SoftwareApplication"
 ---
 
 <hr>
@@ -49,7 +52,7 @@ description: "MCPower: Monte Carlo power analysis for Python. Find sample sizes 
 
 <hr>
 
-<h2>Desktop Application</h2>
+<h2>Desktop Application (GUI)</h2>
 
 <p style="text-align: justify;">Prefer a graphical interface? <strong><a href="https://github.com/pawlenartowicz/mcpower-gui">MCPower GUI</a></strong> is a standalone desktop app &mdash; no Python installation required. Download ready-to-run executables for Windows, Linux, and macOS.</p>
 
@@ -67,15 +70,61 @@ description: "MCPower: Monte Carlo power analysis for Python. Find sample sizes 
 
 <p style="text-align: justify;">The GUI walks you through three steps: <strong>Model</strong> (define your study design), <strong>Analysis</strong> (choose mode and settings), and <strong>Results</strong> (view power tables, charts, and a replication script).</p>
 
+<h3>Step 1: Define Your Model</h3>
+<p style="text-align: justify;">Enter an R-style formula, set variable types and effect sizes. Use Small/Medium/Large buttons for Cohen&rsquo;s conventions, or type custom values.</p>
+<figure>
+  <img src="MCPower-GUI-2.png" alt="MCPower GUI — Model tab with formula, variable types, and effect sizes" style="border: 1px solid rgba(91, 68, 96, 0.15); border-radius: 6px;">
+  <figcaption>Model tab &mdash; formula with interaction, variable types, and effect size sliders</figcaption>
+</figure>
+
+<h3>Step 2: Configure &amp; Run Analysis</h3>
+<p style="text-align: justify;">Choose between Find Power (at a fixed sample size) or Find Sample Size (search a range). Enable scenario analysis for robustness testing.</p>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5em 0;">
+  <figure style="margin: 0;">
+    <img src="MCPower-GUI-3.png" alt="MCPower GUI — Analysis tab with power and sample size settings" style="border: 1px solid rgba(91, 68, 96, 0.15); border-radius: 6px;">
+    <figcaption>Analysis tab &mdash; settings for target power, scenarios, and sample size range</figcaption>
+  </figure>
+  <figure style="margin: 0;">
+    <img src="MCPower-GUI-4.png" alt="MCPower GUI — Simulation running with progress bar" style="border: 1px solid rgba(91, 68, 96, 0.15); border-radius: 6px;">
+    <figcaption>Simulation in progress &mdash; real-time progress with option to abandon</figcaption>
+  </figure>
+</div>
+
+<h3>Step 3: View Results</h3>
+<p style="text-align: justify;">Interactive power curves, bar charts with scenario tabs (Optimistic / Realistic / Doomer), data tables, and a ready-to-use Python replication script.</p>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5em 0;">
+  <figure style="margin: 0;">
+    <img src="MCPower-GUI-5.png" alt="MCPower GUI — Find Sample Size results with power curves" style="border: 1px solid rgba(91, 68, 96, 0.15); border-radius: 6px;">
+    <figcaption>Find Sample Size &mdash; power curves across sample sizes with scenario analysis</figcaption>
+  </figure>
+  <figure style="margin: 0;">
+    <img src="MCPower-GUI-6.png" alt="MCPower GUI — Find Power results with bar chart, table, and replication script" style="border: 1px solid rgba(91, 68, 96, 0.15); border-radius: 6px;">
+    <figcaption>Find Power &mdash; bar chart, data table, and replication script</figcaption>
+  </figure>
+</div>
+
+<h3>Dark Theme &amp; ANOVA Mode</h3>
+<p style="text-align: justify;">MCPower GUI includes a dark theme and a dedicated ANOVA mode for factorial designs with automatic factor handling.</p>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5em 0;">
+  <figure style="margin: 0;">
+    <img src="MCPower-GUI-d1.png" alt="MCPower GUI — ANOVA mode in dark theme" style="border: 1px solid rgba(91, 68, 96, 0.15); border-radius: 6px;">
+    <figcaption>ANOVA mode (dark theme) &mdash; factorial design with named factors and levels</figcaption>
+  </figure>
+  <figure style="margin: 0;">
+    <img src="MCPower-GUI-d2.png" alt="MCPower GUI — Results in dark theme" style="border: 1px solid rgba(91, 68, 96, 0.15); border-radius: 6px;">
+    <figcaption>Results (dark theme) &mdash; power curves with scenario analysis</figcaption>
+  </figure>
+</div>
+
 <hr>
 
-<h2>Get Started in 2 Minutes</h2>
+<h2>Python Package: Get Started in 2 Minutes</h2>
 
-<h4>Installation</h4>
+<h3>Installation</h3>
 
 <pre><code>pip install mcpower</code></pre>
 
-<h4>Your First Power Analysis</h4>
+<h3>Your First Power Analysis</h3>
 
 <pre><code># python
 
@@ -97,7 +146,7 @@ model.find_sample_size(target_test="treatment", from_size=50, to_size=200)</code
 
 <hr>
 
-<h2>Scenario Analysis: Test Your Assumptions</h2>
+<h2>Python Package: Scenario Analysis</h2>
 
 <p style="text-align: justify;"><strong>Real studies rarely match perfect assumptions.</strong> MCPower&rsquo;s scenario analysis tests how robust your power calculations are under realistic conditions.</p>
 
@@ -126,138 +175,9 @@ treatment                                75           85           100
 
 <hr>
 
-<h2>Copy-Paste Examples</h2>
-
-<h4>Randomized Controlled Trial</h4>
-
-<pre><code># python
-
-from mcpower import MCPower
-
-model = MCPower("outcome = treatment + age + baseline_score")
-model.set_effects("treatment=0.6, age=0.2, baseline_score=0.8")
-model.set_variable_type("treatment=binary")
-
-model.find_sample_size(target_test="treatment", from_size=100, to_size=500,
-                      by=50, scenarios=True)</code></pre>
-
-<h4>A/B Test with Interaction</h4>
-
-<pre><code># python
-
-from mcpower import MCPower
-
-model = MCPower("conversion = treatment + user_type + treatment*user_type")
-model.set_effects("treatment=0.4, user_type=0.3, treatment:user_type=0.5")
-model.set_variable_type("treatment=binary, user_type=binary")
-
-model.find_power(sample_size=400, target_test="treatment:user_type", scenarios=True)</code></pre>
-
-<h4>Multi-Group Study with Categorical Variables</h4>
-
-<pre><code># python
-
-from mcpower import MCPower
-
-model = MCPower("wellbeing = treatment + education + age")
-model.set_variable_type("treatment=(factor,3), education=(factor,4)")
-model.set_effects("treatment[2]=0.4, treatment[3]=0.6, education[2]=0.3, education[3]=0.5, education[4]=0.7, age=0.2")
-
-model.find_sample_size(target_test="treatment[2], treatment[3]", scenarios=True)</code></pre>
-
-<h4>Survey with Correlated Predictors</h4>
-
-<pre><code># python
-
-from mcpower import MCPower
-
-model = MCPower("wellbeing = income + education + social_support")
-model.set_effects("income=0.4, education=0.3, social_support=0.6")
-model.set_correlations("corr(income, education)=0.5, corr(income, social_support)=0.3")
-
-model.find_sample_size(target_test="all", from_size=200, to_size=800,
-                      by=100, scenarios=True)</code></pre>
-
-<h4>Mixed-Effects Model (Random Intercept)</h4>
-
-<pre><code># python
-
-from mcpower import MCPower
-
-model = MCPower("satisfaction ~ treatment + motivation + (1|school)")
-model.set_cluster("school", ICC=0.2, n_clusters=20)
-model.set_effects("treatment=0.5, motivation=0.3")
-model.set_variable_type("treatment=binary")
-
-# Total sample_size is split across clusters: 1000 / 20 = 50 per cluster
-model.find_power(sample_size=1000)</code></pre>
-
-<h4>Mixed-Effects Model (Random Slopes)</h4>
-
-<pre><code># python
-
-from mcpower import MCPower
-
-# Effect of x1 varies across clusters
-model = MCPower("y ~ x1 + (1 + x1|school)")
-model.set_cluster("school", ICC=0.2, n_clusters=20,
-                   random_slopes=["x1"], slope_variance=0.1,
-                   slope_intercept_corr=0.3)
-model.set_effects("x1=0.5")
-model.set_max_failed_simulations(0.30)
-model.find_power(sample_size=1000)</code></pre>
-
-<h4>Mixed-Effects Model (Nested Random Effects)</h4>
-
-<pre><code># python
-
-from mcpower import MCPower
-
-# Students in classrooms in schools
-model = MCPower("y ~ treatment + (1|school/classroom)")
-model.set_cluster("school", ICC=0.15, n_clusters=10)
-model.set_cluster("classroom", ICC=0.10, n_per_parent=3)  # 3 classrooms per school
-model.set_effects("treatment=0.5")
-model.set_max_failed_simulations(0.30)
-model.find_power(sample_size=1500)</code></pre>
-
-<hr>
-
-<h2>Quick Reference</h2>
-
-<table style="font-size: 0.85rem; border-spacing: 12px 0; border-collapse: separate;">
-  <thead>
-    <tr><th>Want to&hellip;</th><th>Use this</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>Find required sample size</td><td><code>model.find_sample_size(target_test="effect_name")</code></td></tr>
-    <tr><td>Check power for specific N</td><td><code>model.find_power(sample_size=150, target_test="effect_name")</code></td></tr>
-    <tr><td><strong>Test robustness</strong></td><td><strong>Add <code>scenarios=True</code> to either method</strong></td></tr>
-    <tr><td><strong>Detailed output with plots</strong></td><td><strong>Add <code>summary="long"</code> to either method</strong></td></tr>
-    <tr><td>Test overall model</td><td><code>target_test="overall"</code></td></tr>
-    <tr><td>Test multiple effects</td><td><code>target_test="effect1, effect2"</code> or <code>"all"</code></td></tr>
-    <tr><td>Binary variables</td><td><code>model.set_variable_type("var=binary")</code></td></tr>
-    <tr><td><strong>Factor variables</strong></td><td><strong><code>model.set_variable_type("var=(factor,3)")</code></strong></td></tr>
-    <tr><td><strong>Factor effects</strong></td><td><strong><code>model.set_effects("var[2]=0.5, var[3]=0.7")</code></strong></td></tr>
-    <tr><td>Correlated predictors</td><td><code>model.set_correlations("corr(var1, var2)=0.4")</code></td></tr>
-    <tr><td>Multiple testing correction</td><td>Add <code>correction="FDR"</code>, <code>"Holm"</code>, <code>"Bonferroni"</code>, or <code>"Tukey"</code></td></tr>
-    <tr><td>Post-hoc pairwise comparison</td><td><code>target_test="group[0] vs group[1]"</code> with <code>correction="tukey"</code></td></tr>
-    <tr><td>Mixed model (random intercept)</td><td><code>MCPower("y ~ x + (1|group)")</code> + <code>model.set_cluster(...)</code></td></tr>
-    <tr><td>Random slopes</td><td><code>MCPower("y ~ x + (1+x|group)")</code> + <code>set_cluster(..., random_slopes=["x"], slope_variance=0.1)</code></td></tr>
-    <tr><td>Nested random effects</td><td><code>MCPower("y ~ x + (1|A/B)")</code> + two <code>set_cluster()</code> calls</td></tr>
-    <tr><td>Upload your own data</td><td><code>model.upload_data(dataframe)</code></td></tr>
-    <tr><td>Reproducible results</td><td><code>model.set_seed(42)</code></td></tr>
-    <tr><td>Get results as dict</td><td>Add <code>return_results=True</code> to either method</td></tr>
-    <tr><td>Stricter significance</td><td><code>model.set_alpha(0.01)</code></td></tr>
-    <tr><td>Target 90% power</td><td><code>model.set_power(90)</code></td></tr>
-  </tbody>
-</table>
-
-<hr>
-
 <h2>When to Use MCPower</h2>
 
-<h4>Use MCPower when you have:</h4>
+<h3>Use MCPower when you have:</h3>
 <ul>
   <li>Interaction terms (<code>treatment*covariate</code>)</li>
   <li>Categorical variables with multiple levels</li>
@@ -268,21 +188,11 @@ model.find_power(sample_size=1500)</code></pre>
   <li>Complex models where traditional power analysis fails</li>
 </ul>
 
-<h4>Use traditional power analysis for:</h4>
+<h3>Use traditional power analysis for:</h3>
 <ul>
   <li>Models that are not yet implemented in MCPower</li>
   <li>Simple models where all assumptions are clearly met</li>
   <li>Very large analyses with tens of thousands of observations</li>
-</ul>
-
-<hr>
-
-<h2>Roadmap</h2>
-
-<ul>
-  <li><strong>Done</strong>: Linear Regression, Scenarios &amp; robustness analysis, Factor variables, C++ native backend (3x speedup), Mixed-Effects Models &mdash; random intercepts, random slopes, nested effects (<a href="/reports/lme4-validation-report.html">validated against lme4</a>), ANOVA &amp; Post-Hoc Tests (Tukey HSD)</li>
-  <li><strong>In progress</strong>: Logistic Regression</li>
-  <li><strong>Planned</strong>: Two-group comparison with alternative tests, Robust regression methods</li>
 </ul>
 
 <hr>
