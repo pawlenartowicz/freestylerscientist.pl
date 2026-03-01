@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=d26f3b38" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=98ddfbe0" />
     
     
 
@@ -188,15 +188,24 @@
   <aside class="sidebar-drawer">
     <div class="sidebar-container">
       
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="https://freestylerscientist.pl/">
-  <span style="font-size: 0.85em; color: var(--color-foreground-secondary);">
-    by <strong>Paweł Lenartowicz</strong>
-  </span>
-</a>
-<div style="margin-top: 0.5em; font-size: 0.8em;">
-  <a href="https://freestylerscientist.pl/about-me/" style="color: var(--color-foreground-muted);">About the author</a>
-  &nbsp;&middot;&nbsp;
-  <a href="https://freestylerscientist.pl/support_me/" style="color: var(--color-foreground-muted);">Support this project</a>
+      <div class="sidebar-sticky">
+<div class="sidebar-project-info">
+  <a class="sidebar-brand" href="#">
+    <img class="sidebar-brand-logo" src="_static/mcpower_asci.png" alt="MCPower">
+  </a>
+  <div class="sidebar-version">v0.6.1</div>
+  <div class="sidebar-tagline">Monte Carlo power analysis for complex statistical models</div>
+</div>
+
+<div class="sidebar-separator"></div>
+
+
+<div class="sidebar-author-info">
+  <span>by <a href="https://freestylerscientist.pl/"><strong>Pawe&#322; Lenartowicz</strong></a></span>
+  <div class="sidebar-author-links">
+    <a href="https://freestylerscientist.pl/about-me/">About the author</a>
+    <a href="https://freestylerscientist.pl/support_me/">Support this project</a>
+  </div>
 </div><form class="sidebar-search-container" method="get" action="search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
   <input type="hidden" name="check_keywords" value="yes">
@@ -209,7 +218,6 @@
 <li class="toctree-l1"><a class="reference internal" href="getting-started/quickstart.html">Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting-started/faq.html">FAQ</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="tutorials/index.html">Tutorials</a><input aria-label="Toggle navigation of Tutorials" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/first-analysis.html">Tutorial: Your First Power Analysis</a></li>
@@ -227,9 +235,6 @@
 <li class="toctree-l2"><a class="reference internal" href="tutorials/custom-scenarios.html">Tutorial: Using Custom Scenarios</a></li>
 </ul>
 </li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Concepts</span></p>
-<ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="concepts/index.html">Concepts</a><input aria-label="Toggle navigation of Concepts" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="concepts/effect-sizes.html">Effect Sizes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="concepts/variable-types.html">Variable Types</a></li>
@@ -239,9 +244,6 @@
 <li class="toctree-l2"><a class="reference internal" href="concepts/performance.html">Performance</a></li>
 </ul>
 </li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
-<ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api/index.html">API Reference</a><input aria-label="Toggle navigation of API Reference" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/constructor.html">MCPower() Constructor</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/power-analysis.html">Power Analysis</a></li>
@@ -298,14 +300,19 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section class="tex2jax_ignore mathjax_ignore" id="mcpower-documentation">
-<h1>MCPower Documentation<a class="headerlink" href="#mcpower-documentation" title="Link to this heading">¶</a></h1>
+          <img alt="MCPower" class="hero-logo" src="_images/mcpower_asci.png" />
+<section class="tex2jax_ignore mathjax_ignore" id="mcpower">
+<h1>MCPower<a class="headerlink" href="#mcpower" title="Link to this heading">¶</a></h1>
 <p>Monte Carlo power analysis for complex statistical models. Instead of relying on closed-form formulas, MCPower <strong>simulates thousands of datasets</strong> and counts how often your analysis detects real effects.</p>
 <p>Two core functions drive every analysis:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">find_power()</span></code></strong> — Given a sample size, estimate statistical power</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">find_sample_size()</span></code></strong> — Find the minimum sample size for a target power level</p></li>
 </ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is the documentation for the <strong>MCPower Python package</strong>. If you’re looking for the desktop application, <strong><a class="reference external" href="https://github.com/pawlenartowicz/mcpower-gui">MCPower GUI</a></strong> is a standalone app for Windows, Linux, and macOS with built-in documentation — download it from the <a class="reference external" href="https://github.com/pawlenartowicz/mcpower-gui/releases/latest">releases page</a>. These docs are still useful for understanding how power analysis settings work under the hood.</p>
+</div>
 <section id="install">
 <h2>Install<a class="headerlink" href="#install" title="Link to this heading">¶</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>mcpower
@@ -347,15 +354,6 @@ Result: 2/4 tests achieved target power
 </div>
 </div>
 </div>
-</section>
-<section id="about">
-<h2>About<a class="headerlink" href="#about" title="Link to this heading">¶</a></h2>
-<p>MCPower is developed by <a class="reference external" href="https://freestylerscientist.pl/about-me/">Paweł Lenartowicz</a>, an independent researcher working on Monte Carlo methods, metascience, and open science tools.</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://freestylerscientist.pl/projects/mcpower/">Project homepage</a> — screenshots, GUI walkthrough, citation info</p></li>
-<li><p><a class="reference external" href="https://freestylerscientist.pl/support_me/">Support this project</a> — MCPower is free and open source</p></li>
-<li><p><a class="reference external" href="https://github.com/pawlenartowicz/MCPower">GitHub</a></p></li>
-</ul>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
@@ -391,7 +389,6 @@ Result: 2/4 tests achieved target power
 </ul>
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Tutorials</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="tutorials/first-analysis.html">Tutorial: Your First Power Analysis</a></li>
@@ -409,11 +406,6 @@ Result: 2/4 tests achieved target power
 <li class="toctree-l2"><a class="reference internal" href="tutorials/custom-scenarios.html">Tutorial: Using Custom Scenarios</a></li>
 </ul>
 </li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Concepts</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="concepts/index.html">Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="concepts/effect-sizes.html">Effect Sizes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="concepts/variable-types.html">Variable Types</a></li>
@@ -423,11 +415,6 @@ Result: 2/4 tests achieved target power
 <li class="toctree-l2"><a class="reference internal" href="concepts/performance.html">Performance</a></li>
 </ul>
 </li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/index.html#quick-reference">Quick Reference</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/index.html#pages">Pages</a></li>
@@ -481,36 +468,33 @@ Result: 2/4 tests achieved target power
       </div>
       <footer>
         
-        <div class="related-pages">
-          <a class="next-page" href="getting-started/installation.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">Installation</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          
-        </div>
-        <div class="bottom-of-page">
-          <div class="left-details">
-            <div class="copyright">
-                Copyright &#169; 2025–2026, Paweł Lenartowicz
-            </div>
-            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
-            
-            <a href="https://github.com/pradyunsg/furo">Furo</a>
-            
-          </div>
-          <div class="right-details">
-            <div class="icons">
-              <a class="muted-link " href="https://github.com/pawlenartowicz/MCPower" aria-label="GitHub"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg></a>
-              
-            </div>
-          </div>
-        </div>
-        
+<div class="related-pages">
+  <a class="next-page" href="getting-started/installation.html">
+      <div class="page-info">
+        <div class="context"><span>Next</span></div>
+        <div class="title">Installation</div>
+      </div>
+      <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+    </a>
+  
+</div>
+<div class="bottom-of-page">
+  <div class="left-details">
+    <div class="copyright">
+      Copyright &#169; 2025&ndash;2026,
+      <a href="https://freestylerscientist.pl/">Pawe&#322; Lenartowicz</a>.
+      Licensed under
+      <a href="https://www.gnu.org/licenses/gpl-3.0.html">GPL-3.0</a>.
+    </div>
+  </div>
+  <div class="right-details">
+    <div class="icons">
+      <a class="muted-link " href="https://github.com/pawlenartowicz/MCPower" aria-label="GitHub"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg></a>
+      
+    </div>
+  </div>
+</div>
+
       </footer>
     </div>
     <aside class="toc-drawer">
@@ -525,10 +509,9 @@ Result: 2/4 tests achieved target power
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">MCPower Documentation</a><ul>
+<li><a class="reference internal" href="#">MCPower</a><ul>
 <li><a class="reference internal" href="#install">Install</a></li>
-<li><a class="reference internal" href="#quick-example">Quick Example</a></li>
-<li><a class="reference internal" href="#about">About</a><ul>
+<li><a class="reference internal" href="#quick-example">Quick Example</a><ul>
 </ul>
 </li>
 </ul>
