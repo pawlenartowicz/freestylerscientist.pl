@@ -9,7 +9,7 @@
         <title>FAQ - MCPower</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.8ecb98da25f57f5357bf6f572d296f466b2cfe2517ffebfabe82451661e28f02.css?v=6644e6bb" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=8dab3a3b" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=98ddfbe0" />
     
@@ -193,7 +193,7 @@
   <a class="sidebar-brand" href="../index.html">
     <img class="sidebar-brand-logo" src="../_static/mcpower_asci.png" alt="MCPower">
   </a>
-  <div class="sidebar-version">v0.6.1</div>
+  <div class="sidebar-version">v0.6.0</div>
   <div class="sidebar-tagline">Monte Carlo power analysis for complex statistical models</div>
 </div>
 
@@ -362,6 +362,85 @@
 <p>Then reinstall: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">--force-reinstall</span> <span class="pre">mcpower</span></code></p>
 </section>
 <hr class="docutils" />
+<section id="mcpower-vs-g-power">
+<h2>MCPower vs G*Power<a class="headerlink" href="#mcpower-vs-g-power" title="Link to this heading">¶</a></h2>
+<p><strong>Q: How does MCPower compare to G*Power?</strong></p>
+<p>A: They are complementary tools with different strengths. G*Power uses analytical (closed-form) formulas and covers ~70+ standard tests. MCPower uses Monte Carlo simulation and handles complex models where closed-form solutions don’t exist.</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Feature</p></th>
+<th class="head"><p>MCPower</p></th>
+<th class="head"><p>G*Power</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Approach</strong></p></td>
+<td><p>Monte Carlo simulation</p></td>
+<td><p>Analytical (closed-form)</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Platform</strong></p></td>
+<td><p>Python + app for Win/Mac/Linux</p></td>
+<td><p>Win/Mac</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Simple tests</strong> (t, Anova)</p></td>
+<td><p>Via regression formulation + deticated Anova in APP</p></td>
+<td><p>Yes — ~70+ dedicated tests</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Manova</strong></p></td>
+<td><p>No</p></td>
+<td><p>Yes — ~70+ dedicated tests</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Regression</strong> (linear, logistic, Poisson)</p></td>
+<td><p>Linear (logistic and Poisson under development)</p></td>
+<td><p>All three</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Mixed-effects models</strong> (nested, random slopes)</p></td>
+<td><p>Yes (custom solver)</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Factorial designs &amp; interactions</strong></p></td>
+<td><p>Yes (almost any)</p></td>
+<td><p>Limited</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Correlated &amp; non-normal predictors</strong></p></td>
+<td><p>Yes (7 default distributions + unlimited empirical upload)</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Effect sizes</strong></p></td>
+<td><p>Cohen’s conventions and standardized β</p></td>
+<td><p>Full Cohen suite (d, f, w, h) + calculator</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Power analysis modes</strong></p></td>
+<td><p>A priori, post-hoc</p></td>
+<td><p>A priori, post-hoc, sensitivity</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Multiple comparison corrections</strong></p></td>
+<td><p>Bonferroni, BH-FDR, Holm, Tukey HSD</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Robustness stress-testing</strong></p></td>
+<td><p>Yes (Default + custom scenarios)</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Model misspecification testing</strong></p></td>
+<td><p>Yes (via diffrent generation and testing formula)</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Cumulative probability</strong> (at-least-k significant)</p></td>
+<td><p>Yes</p></td>
+<td><p>No</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Speed</strong></p></td>
+<td><p>1–5s simple, 15–30s complex models</p></td>
+<td><p>Near-instant</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>In short:</strong> Use G*Power for standard tests (t-test, χ², ANOVA) with known formulas. Use MCPower when your design involves interactions, correlated predictors, non-normal data, mixed-effects models, or you need robustness analysis.</p>
+</section>
+<hr class="docutils" />
 <section id="performance">
 <h2>Performance<a class="headerlink" href="#performance" title="Link to this heading">¶</a></h2>
 <p><strong>Q: How can I speed up the analysis?</strong></p>
@@ -434,6 +513,7 @@
 <li><a class="reference internal" href="#general">General</a></li>
 <li><a class="reference internal" href="#mixed-models">Mixed Models</a></li>
 <li><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
+<li><a class="reference internal" href="#mcpower-vs-g-power">MCPower vs G*Power</a></li>
 <li><a class="reference internal" href="#performance">Performance</a></li>
 </ul>
 </li>
@@ -446,7 +526,7 @@
       
     </aside>
   </div>
-</div><script src="../_static/documentation_options.js?v=2bd037f0"></script>
+</div><script src="../_static/documentation_options.js?v=8fa8b3e9"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/scripts/furo.js?v=46bd48cc"></script>
