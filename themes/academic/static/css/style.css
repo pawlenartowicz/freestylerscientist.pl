@@ -162,6 +162,8 @@ figcaption {
   border: none;
   color: var(--color-contrast);
   cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
 }
 
 /* === Main Content === */
@@ -238,6 +240,7 @@ figcaption {
   color: var(--color-primary);
   font-family: var(--font-sans);
   font-size: 0.85rem;
+  min-height: 24px;
 }
 
 .social-links svg {
@@ -333,6 +336,7 @@ summary {
   font-style: italic;
   cursor: pointer;
   padding: 0.75em 1em;
+  min-height: 44px;
   list-style: none;
   display: flex;
   align-items: center;
@@ -521,11 +525,23 @@ li::marker {
   border-collapse: separate;
 }
 
+/* === Screen Reader Only === */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* === Skip Link === */
 .skip-link {
   position: absolute;
-  left: -9999px;
-  top: auto;
+  clip-path: inset(50%);
   width: 1px;
   height: 1px;
   overflow: hidden;
@@ -545,6 +561,7 @@ li::marker {
   top: 0;
   width: auto;
   height: auto;
+  clip-path: none;
 }
 
 /* === Focus Styles === */

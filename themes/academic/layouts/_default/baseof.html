@@ -88,9 +88,9 @@
     <div class="header-inner">
       <a href="/" class="site-title">{{ .Site.Title }}</a>
       <button class="menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="site-nav">Menu</button>
-      <nav class="site-nav" id="site-nav">
+      <nav class="site-nav" id="site-nav" aria-label="Main navigation">
         {{ range .Site.Menus.main }}
-          <a href="{{ .URL }}"{{ if $.IsMenuCurrent "main" . }} class="active"{{ end }}>{{ .Name }}</a>
+          <a href="{{ .URL }}"{{ if $.IsMenuCurrent "main" . }} class="active" aria-current="page"{{ end }}>{{ .Name }}</a>
         {{ end }}
       </nav>
     </div>
@@ -125,6 +125,16 @@
           toggle.setAttribute('aria-expanded', 'false');
           toggle.focus();
         }
+      }
+    });
+
+    // Announce external links to screen readers
+    document.querySelectorAll('a[target="_blank"]').forEach(function(link) {
+      if (!link.querySelector('.sr-only') && !link.getAttribute('aria-label')) {
+        var span = document.createElement('span');
+        span.className = 'sr-only';
+        span.textContent = ' (opens in new window)';
+        link.appendChild(span);
       }
     });
 
