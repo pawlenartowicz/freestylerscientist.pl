@@ -249,7 +249,7 @@ figcaption {
   fill: var(--color-primary);
 }
 
-/* === Project Cards === */
+/* === Project Cards — unified boxed catalog entries === */
 .project-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -259,23 +259,53 @@ figcaption {
 .project-card {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.85rem;
+  padding: 1.4rem 1.5rem 1.5rem;
+  border: 1px solid rgba(91, 68, 96, 0.22);
+  border-radius: 6px;
+  background: rgba(91, 68, 96, 0.05);
+  overflow: hidden;
+}
+
+.project-card--placeholder {
+  border-style: dashed;
+}
+
+/* Image bleeds to card edges via negative margins matching the card padding */
+.project-card .card-image-link {
+  display: block;
+  margin: -1.4rem -1.5rem 0;
 }
 
 .project-card img {
   width: 100%;
   aspect-ratio: 16/9;
   object-fit: cover;
-  border-radius: 4px;
+  display: block;
+  border-radius: 0;
 }
 
 .project-card h4 {
-  margin-bottom: 0.25em;
+  margin-bottom: 0.15em;
 }
 
 .project-card p {
   font-size: 0.9rem;
   margin-bottom: 0;
+}
+
+.project-card--placeholder p {
+  color: var(--color-primary);
+  opacity: 0.85;
+}
+
+.project-card--placeholder h4 a {
+  color: var(--color-contrast);
+}
+
+.project-card--placeholder h4 a:hover {
+  color: var(--color-primary);
+  text-decoration: none;
 }
 
 /* === Buttons === */
@@ -639,5 +669,172 @@ summary:focus-visible {
   .button-row {
     flex-direction: column;
     align-items: stretch;
+  }
+}
+
+/* === Projects Index — editorial-atlas treatment === */
+.projects-lede {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--color-primary);
+  max-width: 640px;
+  margin: 0 0 2.75rem;
+  line-height: 1.55;
+}
+
+/* Section header — single mono-caps eyebrow, no italic-serif duplicate */
+.projects-index .section-eyebrow-h2 {
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-weight: 500;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  opacity: 0.6;
+  margin-top: 3.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.85em;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.projects-index > .section-eyebrow-h2:first-of-type {
+  margin-top: 0.5rem;
+}
+
+/* External-link glyph — discreet, lifts on hover */
+.ext::after {
+  content: "↗";
+  display: inline-block;
+  margin-left: 0.3em;
+  font-family: var(--font-mono);
+  font-size: 0.78em;
+  font-weight: 500;
+  font-style: normal;
+  color: var(--color-primary);
+  opacity: 0.5;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.ext:hover::after {
+  opacity: 1;
+  transform: translate(2px, -2px);
+}
+
+/* === Card head: tags + numeral row === */
+.card-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  min-height: 1.4rem;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.card-num {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--color-primary);
+  opacity: 0.4;
+  white-space: nowrap;
+}
+
+/* === Chip system — generic, composable === */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  background: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.25em 0.7em;
+  white-space: nowrap;
+}
+
+.chip--dev::before {
+  content: "◷";
+  font-size: 1em;
+  opacity: 0.75;
+}
+
+.chip--accent {
+  border-color: rgba(252, 194, 99, 0.55);
+  background: rgba(252, 194, 99, 0.14);
+  color: #6e4f1d;
+}
+
+.chip--rose {
+  border-color: rgba(231, 161, 169, 0.55);
+  background: rgba(231, 161, 169, 0.14);
+  color: #6e3b41;
+}
+
+/* Two-col variant for "Other Projects" */
+.project-grid--two-col {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 920px;
+  gap: 2.5rem;
+}
+
+/* Other Papers — hanging-indent citation list */
+.paper-list {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  max-width: 800px;
+}
+
+.paper-list li {
+  padding-left: 1.6em;
+  text-indent: -1.6em;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.paper-list li::marker {
+  content: none;
+}
+
+.paper-list .preprint-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  opacity: 0.65;
+  margin-right: 0.4em;
+  text-indent: 0;
+}
+
+@media (max-width: 768px) {
+  .project-grid--two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .projects-index .section-eyebrow-h2 {
+    font-size: 0.78rem;
+    margin-top: 2.5rem;
   }
 }
